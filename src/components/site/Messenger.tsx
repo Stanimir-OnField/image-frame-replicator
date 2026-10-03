@@ -24,7 +24,7 @@ export function Messenger() {
   const product = active && products.find((p) => p.id === active.productId);
 
   return (
-    <div className="card-soft grid h-[600px] overflow-hidden md:grid-cols-[300px_1fr]">
+    <div className="card-soft grid h-[calc(100vh-200px)] min-h-[500px] md:h-[600px] overflow-hidden md:grid-cols-[300px_1fr]">
       <ul className={cn("overflow-y-auto border-r border-border", active && "hidden md:block")}>
         {convs.map((c) => {
           const unread = read.includes(c.id) ? 0 : c.unread;

@@ -5,7 +5,7 @@ export type PanelItem = { to: NonNullable<LinkProps["to"]>; label: string; icon:
 
 export function PanelLayout({ title, subtitle, items }: { title: string; subtitle: string; items: PanelItem[] }) {
   return (
-    <div className="container-page grid gap-8 py-8 lg:grid-cols-[240px_1fr]">
+    <div className="container-page grid gap-8 py-6 lg:py-8 lg:grid-cols-[240px_1fr]">
       <aside>
         <div className="mb-4 hidden lg:block"><p className="font-display text-xl font-semibold text-forest">{title}</p><p className="text-sm text-muted-foreground">{subtitle}</p></div>
         <nav className="-mx-4 flex gap-1 overflow-x-auto px-4 pb-2 lg:mx-0 lg:flex-col lg:px-0" aria-label={title}>
@@ -24,5 +24,5 @@ export function PanelLayout({ title, subtitle, items }: { title: string; subtitl
 }
 
 export function PanelTitle({ title, action }: { title: string; action?: React.ReactNode }) {
-  return <div className="mb-6 flex flex-wrap items-center justify-between gap-3"><h1 className="text-3xl font-semibold">{title}</h1>{action}</div>;
+  return <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"><h1 className="text-3xl font-semibold">{title}</h1>{action}</div>;
 }
