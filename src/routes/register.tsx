@@ -25,10 +25,10 @@ function Register() {
   return (
     <AuthCard title="Създай профил" subtitle="Регистрацията е безплатна.">
       <p className="mb-3 font-semibold text-forest">Как ще използваш платформата?</p>
-      <div className="mb-6 grid grid-cols-2 gap-3" role="radiogroup">
+      <div className="mb-6 grid grid-cols-1 gap-2 min-[360px]:grid-cols-2 sm:gap-3" role="radiogroup">
         {([["customer", "Като клиент", ShoppingBasket], ["producer", "Като производител", Tractor]] as const).map(([v, l, I]) => (
           <button key={v} type="button" role="radio" aria-checked={type === v} onClick={() => navigate({ search: { type: v } })}
-            className={cn("flex flex-col items-center gap-2 rounded-2xl border-2 p-4 text-sm font-semibold transition", type === v ? "border-primary bg-accent text-forest" : "border-border")}>
+            className={cn("flex min-h-20 flex-row items-center justify-center gap-2 rounded-2xl border-2 p-3 text-sm font-semibold transition min-[360px]:flex-col min-[360px]:p-4", type === v ? "border-primary bg-accent text-forest" : "border-border")}>
             <I className="size-7 text-primary" />{l}
           </button>
         ))}

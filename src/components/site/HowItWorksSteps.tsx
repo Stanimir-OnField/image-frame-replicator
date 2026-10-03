@@ -10,7 +10,7 @@ export function HowItWorksSteps() {
   return (
     <div className="grid gap-6 md:grid-cols-3">
       {steps.map((s, i) => (
-        <div key={s.title} className="card-soft relative p-7">
+        <div key={s.title} className="card-soft relative p-5 sm:p-7">
           <span className="absolute right-6 top-5 font-display text-5xl font-semibold text-sun/60">{i + 1}</span>
           <div className="mb-5 grid size-14 place-items-center rounded-2xl bg-accent text-primary"><s.icon className="size-7" /></div>
           <h3 className="text-xl font-semibold">{s.title}</h3>

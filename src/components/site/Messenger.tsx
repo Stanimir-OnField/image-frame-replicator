@@ -17,22 +17,22 @@ export function Messenger() {
   const [read, setRead] = useState<string[]>([]);
   const [text, setText] = useState("");
 
-  if (q.isLoading) return <Skeleton className="h-[560px] rounded-2xl" />;
+  if (q.isLoading) return <Skeleton className="h-[calc(100dvh-12rem)] min-h-[420px] rounded-2xl md:h-[600px]" />;
   const convs = q.data ?? [];
   if (!convs.length) return <EmptyState icon={<MessageCircle />} title="Няма съобщения" text="Когато някой ти пише, разговорът ще се появи тук." />;
   const active = convs.find((c) => c.id === activeId);
   const product = active && products.find((p) => p.id === active.productId);
 
   return (
-    <div className="card-soft grid h-[calc(100vh-200px)] min-h-[500px] md:h-[600px] overflow-hidden md:grid-cols-[300px_1fr]">
+    <div className="card-soft grid h-[calc(100dvh-12rem)] min-h-[420px] overflow-hidden md:h-[600px] md:grid-cols-[300px_1fr]">
       <ul className={cn("overflow-y-auto border-r border-border", active && "hidden md:block")}>
         {convs.map((c) => {
           const unread = read.includes(c.id) ? 0 : c.unread;
           const last = [...c.messages, ...(extra[c.id] ?? [])].at(-1)!;
           return (
             <li key={c.id}>
-              <button onClick={() => { setActiveId(c.id); setRead((r) => [...r, c.id]); }} className={cn("flex w-full items-center gap-3 p-4 text-left transition hover:bg-cream", c.id === activeId && "bg-cream")}>
-                <img src={c.avatar} alt="" className="size-11 rounded-full object-cover" />
+              <button onClick={() => { setActiveId(c.id); setRead((r) => [...r, c.id]); }} className={cn("flex min-h-20 w-full items-center gap-3 p-4 text-left transition hover:bg-cream", c.id === activeId && "bg-cream")}>
+                <img src={c.avatar} alt="" className="size-11 shrink-0 rounded-full object-cover" />
                 <div className="min-w-0 flex-1">
                   <div className="flex justify-between gap-2"><p className={cn("truncate", unread ? "font-bold text-forest" : "font-medium")}>{c.with}</p><span className="text-xs text-muted-foreground">{last.time}</span></div>
                   <p className="truncate text-sm text-muted-foreground">{last.text}</p>
@@ -47,13 +47,13 @@ export function Messenger() {
         <div className="flex min-h-0 flex-col">
           <div className="flex items-center gap-3 border-b border-border p-4">
             <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setActiveId(null)} aria-label="Назад"><ArrowLeft /></Button>
-            <div className="flex-1"><p className="font-semibold text-forest">{active.with}</p>{product && <p className="text-xs text-muted-foreground">Относно: {product.name}</p>}</div>
+            <div className="min-w-0 flex-1"><p className="truncate font-semibold text-forest">{active.with}</p>{product && <p className="truncate text-xs text-muted-foreground">Относно: {product.name}</p>}</div>
             {product && <img src={product.images[0]} alt="" className="size-10 rounded-lg object-cover" />}
           </div>
           <div className="flex-1 space-y-3 overflow-y-auto bg-cream/50 p-4">
             {[...active.messages, ...(extra[active.id] ?? [])].map((m) => (
               <div key={m.id} className={cn("flex", m.fromMe && "justify-end")}>
-                <div className={cn("max-w-[75%] rounded-2xl px-4 py-2.5", m.fromMe ? "rounded-br-sm bg-primary text-primary-foreground" : "rounded-bl-sm bg-background shadow-sm")}>
+                <div className={cn("max-w-[88%] rounded-2xl px-3.5 py-2.5 sm:max-w-[75%] sm:px-4", m.fromMe ? "rounded-br-sm bg-primary text-primary-foreground" : "rounded-bl-sm bg-background shadow-sm")}>
                   <p>{m.text}</p><p className={cn("mt-1 text-right text-xs", m.fromMe ? "text-primary-foreground/70" : "text-muted-foreground")}>{m.time}</p>
                 </div>
               </div>
@@ -65,7 +65,7 @@ export function Messenger() {
             setExtra((x) => ({ ...x, [active.id]: [...(x[active.id] ?? []), { id: crypto.randomUUID(), fromMe: true, text, time: now }] }));
             setText("");
           }}>
-            <Input value={text} onChange={(e) => setText(e.target.value)} placeholder="Напиши съобщение..." className="rounded-full" aria-label="Съобщение" />
+            <Input value={text} onChange={(e) => setText(e.target.value)} placeholder="Напиши съобщение..." className="min-w-0 rounded-full" aria-label="Съобщение" />
             <Button type="submit" size="icon" aria-label="Изпрати"><Send /></Button>
           </form>
         </div>

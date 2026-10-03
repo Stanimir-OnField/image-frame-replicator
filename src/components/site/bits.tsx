@@ -63,10 +63,10 @@ export function DeliveryTags({ methods, compact }: { methods: DeliveryMethod[]; 
 
 export function SectionHeading({ title, eyebrow, action }: { title: string; eyebrow?: string; action?: ReactNode }) {
   return (
-    <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-      <div>
+    <div className="mb-6 grid grid-cols-1 gap-3 sm:mb-8 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
+      <div className="min-w-0">
         {eyebrow && <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-primary">{eyebrow}</p>}
-        <h2 className="text-3xl font-semibold md:text-4xl">{title}</h2>
+        <h2 className="text-2xl font-semibold sm:text-3xl md:text-4xl">{title}</h2>
       </div>
       {action}
     </div>
@@ -75,7 +75,7 @@ export function SectionHeading({ title, eyebrow, action }: { title: string; eyeb
 
 export function EmptyState({ icon, title, text, action }: { icon: ReactNode; title: string; text: string; action?: ReactNode }) {
   return (
-    <div className="card-soft flex flex-col items-center px-6 py-16 text-center">
+    <div className="card-soft flex flex-col items-center px-5 py-12 text-center sm:px-6 sm:py-16">
       <div className="mb-4 grid size-16 place-items-center rounded-full bg-cream text-primary">{icon}</div>
       <h3 className="text-xl font-semibold">{title}</h3>
       <p className="mt-2 max-w-sm text-muted-foreground">{text}</p>
@@ -86,11 +86,11 @@ export function EmptyState({ icon, title, text, action }: { icon: ReactNode; tit
 
 export function PageHeader({ title, subtitle, children }: { title: string; subtitle?: string; children?: ReactNode }) {
   return (
-    <div className="bg-cream py-10 md:py-14">
+    <div className="bg-cream py-7 sm:py-10 md:py-14">
       <div className="container-page">
         {children}
-        <h1 className="text-4xl font-semibold md:text-5xl">{title}</h1>
-        {subtitle && <p className="mt-3 max-w-2xl text-lg text-muted-foreground">{subtitle}</p>}
+        <h1 className="text-3xl font-semibold sm:text-4xl md:text-5xl">{title}</h1>
+        {subtitle && <p className="mt-2 max-w-2xl text-base text-muted-foreground sm:mt-3 sm:text-lg">{subtitle}</p>}
       </div>
     </div>
   );

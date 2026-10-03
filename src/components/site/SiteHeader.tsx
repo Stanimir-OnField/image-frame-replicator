@@ -15,7 +15,7 @@ const nav = [
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur">
-      <div className="container-page flex h-16 items-center justify-between gap-4">
+      <div className="container-page grid h-16 grid-cols-[minmax(0,1fr)_auto] items-center gap-3 lg:flex lg:justify-between lg:gap-4">
         <Logo />
         <nav className="hidden items-center gap-1 lg:flex" aria-label="Основна навигация">
           {nav.map((n) => (
@@ -37,7 +37,7 @@ export function SiteHeader() {
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Отвори менюто"><Menu className="size-6" /></Button>
           </SheetTrigger>
-          <SheetContent side="right" className="w-80">
+          <SheetContent side="right" className="w-[min(20rem,88vw)] overflow-y-auto">
             <SheetHeader><SheetTitle className="text-left"><Logo /></SheetTitle></SheetHeader>
             <nav className="mt-4 flex flex-col gap-1 px-4">
               {nav.map((n) => (
@@ -61,7 +61,7 @@ export function SiteHeader() {
 export function SiteFooter() {
   return (
     <footer className="mt-20 bg-forest text-primary-foreground">
-      <div className="container-page grid gap-10 py-14 md:grid-cols-4">
+      <div className="container-page grid gap-8 py-10 sm:py-14 md:grid-cols-4 md:gap-10">
         <div className="md:col-span-2">
           <p className="font-display text-2xl font-semibold">От Полето</p>
           <p className="mt-3 max-w-sm text-primary-foreground/75">Истинска храна, директно от българските ферми, мандри и пчелини. Без посредници.</p>

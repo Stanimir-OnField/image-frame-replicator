@@ -19,13 +19,13 @@ function ProductForm() {
   return (
     <>
       <PanelTitle title="Добави продукт" />
-      <form className="card-soft space-y-6 p-6" onSubmit={(e) => { e.preventDefault(); toast.success("Продуктът е запазен"); navigate({ to: "/dashboard/products" }); }}>
+      <form className="card-soft space-y-6 p-4 sm:p-6" onSubmit={(e) => { e.preventDefault(); toast.success("Продуктът е запазен"); navigate({ to: "/dashboard/products" }); }}>
         <div className="grid gap-5 md:grid-cols-2">
           <div className="space-y-1.5 md:col-span-2"><Label htmlFor="n">Име на продукта</Label><Input id="n" required placeholder="напр. Розови домати" /></div>
           <div className="space-y-1.5"><Label>Категория</Label>
             <Select required><SelectTrigger className="rounded-xl"><SelectValue placeholder="Избери" /></SelectTrigger><SelectContent>{categories.map((c) => <SelectItem key={c.slug} value={c.slug}>{c.name}</SelectItem>)}</SelectContent></Select>
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 min-[360px]:grid-cols-2">
             <div className="space-y-1.5"><Label htmlFor="pr">Цена (€)</Label><Input id="pr" type="number" step="0.01" min="0" required /></div>
             <div className="space-y-1.5"><Label>Мерна единица</Label>
               <Select defaultValue="кг"><SelectTrigger className="rounded-xl"><SelectValue /></SelectTrigger><SelectContent>{["кг", "бр.", "л", "буркан", "връзка"].map((u) => <SelectItem key={u} value={u}>{u}</SelectItem>)}</SelectContent></Select>
@@ -41,10 +41,10 @@ function ProductForm() {
           <label className="flex items-center justify-between rounded-xl border border-border p-4"><span className="font-medium">Наличен</span><Switch defaultChecked /></label>
           <div className="space-y-1.5"><Label htmlFor="q">Количество (по избор)</Label><Input id="q" type="number" min="0" /></div>
           <fieldset className="md:col-span-2"><legend className="mb-2 text-sm font-medium">Начини на получаване</legend>
-            <div className="flex flex-wrap gap-5">{Object.values(deliveryLabels).map((l) => <label key={l} className="flex items-center gap-2"><Checkbox defaultChecked={l !== "Куриер"} />{l}</label>)}</div>
+            <div className="grid gap-3 sm:flex sm:flex-wrap sm:gap-5">{Object.values(deliveryLabels).map((l) => <label key={l} className="flex min-h-10 items-center gap-2"><Checkbox defaultChecked={l !== "Куриер"} />{l}</label>)}</div>
           </fieldset>
         </div>
-        <div className="flex justify-end gap-2"><Button type="button" variant="ghost" onClick={() => navigate({ to: "/dashboard/products" })}>Отказ</Button><Button type="submit">Запази продукта</Button></div>
+        <div className="grid grid-cols-2 gap-2 sm:flex sm:justify-end"><Button type="button" variant="ghost" onClick={() => navigate({ to: "/dashboard/products" })}>Отказ</Button><Button type="submit">Запази продукта</Button></div>
       </form>
     </>
   );

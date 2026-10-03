@@ -15,7 +15,7 @@ export function SearchBar() {
         e.preventDefault();
         navigate({ to: "/products", search: { q: q || undefined, location: loc || undefined } });
       }}
-      className="flex flex-col gap-2 rounded-3xl bg-background p-2 shadow-[var(--shadow-lift)] md:flex-row md:items-center md:rounded-full"
+       className="flex flex-col gap-1 rounded-2xl bg-background p-2 shadow-[var(--shadow-lift)] sm:rounded-3xl md:flex-row md:items-center md:rounded-full"
     >
       <label className="flex flex-1 items-center gap-3 rounded-full px-4 py-2">
         <Search className="size-5 shrink-0 text-primary" />
@@ -35,7 +35,7 @@ export function SearchBar() {
           </select>
         </span>
       </label>
-      <Button type="submit" size="lg" className="md:px-10">Намери</Button>
+       <Button type="submit" size="lg" className="w-full md:w-auto md:px-10">Намери</Button>
     </form>
   );
 }
