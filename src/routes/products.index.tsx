@@ -115,18 +115,18 @@ function ProductsPage() {
           <BreadcrumbSeparator /><BreadcrumbItem><BreadcrumbPage>Продукти</BreadcrumbPage></BreadcrumbItem>
         </BreadcrumbList></Breadcrumb>
       </PageHeader>
-      <div className="container-page grid gap-8 py-10 lg:grid-cols-[260px_1fr]">
+      <div className="container-page grid gap-8 py-7 sm:py-10 lg:grid-cols-[260px_1fr]">
         <aside className="hidden lg:block"><div className="card-soft sticky top-24 p-6"><Filters s={s} set={set} /></div></aside>
         <div>
-          <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+          <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
             <p className="text-muted-foreground">{q.data ? `${q.data.total} продукта` : "Зареждане..."}</p>
-            <div className="flex items-center gap-2">
+            <div className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-2 sm:flex">
               <Sheet>
                 <SheetTrigger asChild><Button variant="outline" className="lg:hidden"><SlidersHorizontal /> Филтри</Button></SheetTrigger>
                 <SheetContent side="left" className="overflow-y-auto"><SheetHeader><SheetTitle>Филтри</SheetTitle></SheetHeader><div className="px-4 pb-8"><Filters s={s} set={set} /></div></SheetContent>
               </Sheet>
               <Select value={s.sort ?? "popular"} onValueChange={(v) => set({ sort: v as Search["sort"] })}>
-                <SelectTrigger className="w-52 rounded-full" aria-label="Подреди по"><SelectValue /></SelectTrigger>
+                <SelectTrigger className="w-full min-w-0 rounded-full sm:w-52" aria-label="Подреди по"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="popular">Най-популярни</SelectItem>
                   <SelectItem value="rating">Най-висока оценка</SelectItem>
@@ -157,7 +157,7 @@ function ProductsPage() {
                 {q.data!.items.map((p) => <ProductCard key={p.id} product={p} layout={list ? "list" : "grid"} />)}
               </div>
               {q.data!.pages > 1 && (
-                <nav className="mt-10 flex justify-center gap-2" aria-label="Страници">
+                <nav className="mt-10 flex flex-wrap justify-center gap-2" aria-label="Страници">
                   {Array.from({ length: q.data!.pages }).map((_, i) => (
                     <Button key={i} size="icon" variant={q.data!.page === i + 1 ? "default" : "outline"} onClick={() => set({ page: i + 1 })}>{i + 1}</Button>
                   ))}

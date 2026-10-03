@@ -31,18 +31,18 @@ export function ProductCard({ product, layout = "grid" }: { product: Product; la
     <Link
       to="/products/$id"
       params={{ id: product.id }}
-      className={cn("card-soft hover-lift group relative flex overflow-hidden", list ? "flex-row" : "flex-col")}
+      className={cn("card-soft hover-lift group relative flex min-w-0 overflow-hidden", list ? "flex-row" : "flex-col")}
     >
-      <div className={cn("relative overflow-hidden bg-muted", list ? "w-36 shrink-0 sm:w-52" : "aspect-[4/3]")}>
+      <div className={cn("relative overflow-hidden bg-muted", list ? "w-28 shrink-0 sm:w-52" : "aspect-[4/3]")}>
         <img src={product.images[0]} alt={product.name} loading="lazy" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
         {!product.available && (
           <span className="absolute left-3 top-3 rounded-full bg-forest px-2.5 py-1 text-xs font-semibold text-primary-foreground">Изчерпан</span>
         )}
         <FavoriteButton id={product.id} label={product.name} className="absolute right-3 top-3" />
       </div>
-      <div className="flex flex-1 flex-col gap-2 p-4">
-        <h3 className="font-display text-lg font-semibold leading-tight">{product.name}</h3>
-        <p className="text-sm text-muted-foreground">
+      <div className="flex min-w-0 flex-1 flex-col gap-2 p-3 sm:p-4">
+        <h3 className="line-clamp-2 font-display text-base font-semibold leading-tight sm:text-lg">{product.name}</h3>
+        <p className="truncate text-sm text-muted-foreground">
           {producer.name}
         </p>
         <p className="flex items-center gap-1 text-xs text-muted-foreground"><MapPin className="size-3.5" />{producer.location}</p>
