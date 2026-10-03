@@ -1,7 +1,7 @@
-import { Link, Outlet } from "@tanstack/react-router";
+import { Link, Outlet, type LinkProps } from "@tanstack/react-router";
 import type { LucideIcon } from "lucide-react";
 
-export type PanelItem = { to: string; label: string; icon: LucideIcon; exact?: boolean };
+export type PanelItem = { to: NonNullable<LinkProps["to"]>; label: string; icon: LucideIcon; exact?: boolean };
 
 export function PanelLayout({ title, subtitle, items }: { title: string; subtitle: string; items: PanelItem[] }) {
   return (
