@@ -53,9 +53,9 @@ function Filters({ s, set }: { s: Search; set: (p: Partial<Search>) => void }) {
         <Input id="f-q" defaultValue={s.q} placeholder="Напр. мед" onKeyDown={(e) => e.key === "Enter" && set({ q: (e.target as HTMLInputElement).value || undefined })} onBlur={(e) => set({ q: e.target.value || undefined })} />
       </div>
       {[
-        { label: "Категория", key: "category" as const, opts: categories.map((c) => [c.slug, c.name]) },
-        { label: "Населено място", key: "location" as const, opts: locations.map((l) => [l, l]) },
-        { label: "Производител", key: "producer" as const, opts: producers.map((p) => [p.id, p.name]) },
+        { label: "Категория", key: "category" as const, opts: categories.map((c) => [c.slug, c.name] as const) },
+        { label: "Населено място", key: "location" as const, opts: locations.map((l) => [l, l] as const) },
+        { label: "Производител", key: "producer" as const, opts: producers.map((p) => [p.id, p.name] as const) },
       ].map((f) => (
         <div key={f.key} className="space-y-2">
           <Label>{f.label}</Label>
