@@ -12,7 +12,7 @@ export function InquiryDialog({ to, product, children }: { to: string; product?:
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="rounded-2xl">
+      <DialogContent className="max-h-[90dvh] w-[calc(100%-2rem)] overflow-y-auto rounded-2xl sm:w-full">
         <DialogHeader>
           <DialogTitle className="font-display text-2xl text-forest">Изпрати запитване</DialogTitle>
           <DialogDescription>До {to}. Производителят обикновено отговаря до няколко часа.</DialogDescription>
