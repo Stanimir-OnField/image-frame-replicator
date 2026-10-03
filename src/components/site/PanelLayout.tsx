@@ -6,7 +6,7 @@ export type PanelItem = { to: NonNullable<LinkProps["to"]>; label: string; icon:
 export function PanelLayout({ title, subtitle, items }: { title: string; subtitle: string; items: PanelItem[] }) {
   return (
     <div className="container-page grid gap-5 py-5 sm:gap-8 sm:py-8 lg:grid-cols-[240px_1fr]">
-      <aside className="min-w-0">
+      <aside className="min-w-0 max-w-full overflow-hidden">
         <div className="mb-4 hidden lg:block"><p className="font-display text-xl font-semibold text-forest">{title}</p><p className="text-sm text-muted-foreground">{subtitle}</p></div>
         <nav className="-mx-4 flex gap-1 overflow-x-auto px-4 pb-2 [scrollbar-width:none] lg:mx-0 lg:flex-col lg:px-0" aria-label={title}>
           {items.map((i) => (
@@ -18,7 +18,7 @@ export function PanelLayout({ title, subtitle, items }: { title: string; subtitl
           ))}
         </nav>
       </aside>
-      <div className="min-w-0"><Outlet /></div>
+      <div className="min-w-0 max-w-full"><Outlet /></div>
     </div>
   );
 }

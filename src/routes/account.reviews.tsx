@@ -13,7 +13,7 @@ export const Route = createFileRoute("/account/reviews")({
           const p = producers.find((x) => x.id === r.producerId)!;
           return (
             <article key={r.id} className="card-soft p-5">
-              <div className="flex justify-between"><Link to="/producers/$id" params={{ id: p.id }} className="font-semibold text-forest hover:underline">{p.name}</Link><time className="text-sm text-muted-foreground">{formatDate(r.date)}</time></div>
+              <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3"><Link to="/producers/$id" params={{ id: p.id }} className="font-semibold text-forest hover:underline">{p.name}</Link><time className="text-sm text-muted-foreground">{formatDate(r.date)}</time></div>
               <Stars value={r.rating} /><p className="mt-2">{r.text}</p>
             </article>
           );

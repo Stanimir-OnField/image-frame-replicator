@@ -26,7 +26,7 @@ function ProducersPage() {
     <>
       <PageHeader title="Производители" subtitle="Запознай се с хората, които отглеждат храната ти.">
       </PageHeader>
-      <div className="container-page py-10">
+      <div className="container-page py-7 sm:py-10">
         <Input value={term} onChange={(e) => setTerm(e.target.value)} placeholder="Търси по име или град..." className="mb-8 h-12 max-w-md rounded-full px-5" aria-label="Търси производител" />
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {q.isLoading ? Array.from({ length: 4 }).map((_, i) => <CardSkeleton key={i} />) : list.map((p) => <ProducerCard key={p.id} producer={p} />)}

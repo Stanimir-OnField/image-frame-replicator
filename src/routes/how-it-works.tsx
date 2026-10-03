@@ -15,11 +15,11 @@ export const Route = createFileRoute("/how-it-works")({
   component: () => (
     <>
       <PageHeader title="Как работи?" subtitle="Свързваме те директно с хората, които произвеждат храната ти – без посредници и надценки." />
-      <div className="container-page space-y-16 py-14">
+      <div className="container-page space-y-10 py-10 sm:space-y-16 sm:py-14">
         <HowItWorksSteps />
         <div className="grid gap-6 md:grid-cols-2">
-          <div className="rounded-3xl bg-cream p-8"><h2 className="text-2xl font-semibold">За клиенти</h2><p className="mt-3 text-muted-foreground">Регистрацията е безплатна. Запазвай любими продукти, пиши на производители и оставяй отзиви.</p><Button asChild className="mt-6"><Link to="/register">Създай профил</Link></Button></div>
-          <div className="rounded-3xl bg-accent p-8"><h2 className="text-2xl font-semibold">За производители</h2><p className="mt-3 text-muted-foreground">Създай профил, добави продуктите си и получавай запитвания директно от клиенти.</p><Button asChild variant="sun" className="mt-6"><Link to="/register" search={{ type: "producer" }}>Стани производител</Link></Button></div>
+          <div className="rounded-3xl bg-cream p-5 sm:p-8"><h2 className="text-2xl font-semibold">За клиенти</h2><p className="mt-3 text-muted-foreground">Регистрацията е безплатна. Запазвай любими продукти, пиши на производители и оставяй отзиви.</p><Button asChild className="mt-6 w-full sm:w-auto"><Link to="/register">Създай профил</Link></Button></div>
+          <div className="rounded-3xl bg-accent p-5 sm:p-8"><h2 className="text-2xl font-semibold">За производители</h2><p className="mt-3 text-muted-foreground">Създай профил, добави продуктите си и получавай запитвания директно от клиенти.</p><Button asChild variant="sun" className="mt-6 w-full sm:w-auto"><Link to="/register" search={{ type: "producer" }}>Стани производител</Link></Button></div>
         </div>
       </div>
     </>
