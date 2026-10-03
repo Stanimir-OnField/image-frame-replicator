@@ -20,7 +20,32 @@ function MyProducts() {
       {list.length === 0 ? (
         <EmptyState icon={<Package />} title="Все още нямаш продукти" text="Добави първия си продукт, за да те намират клиенти." action={<Button asChild><Link to="/dashboard/products/new">+ Добави продукт</Link></Button>} />
       ) : (
-        <div className="card-soft overflow-x-auto">
+        <>
+        <div className="space-y-3 md:hidden">
+          {list.map((p) => (
+            <article key={p.id} className="card-soft p-4">
+              <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-3">
+                <img src={p.images[0]} alt="" className="size-16 shrink-0 rounded-xl object-cover" />
+                <div className="min-w-0">
+                  <h2 className="font-semibold text-forest">{p.name}</h2>
+                  <p className="mt-1 text-sm">{eur(p.price)} / {p.unit}</p>
+                  <div className="mt-2 flex flex-wrap gap-2 text-xs">
+                    <span className="rounded-full bg-cream px-2.5 py-1 text-forest">{p.available ? "Наличен" : "Изчерпан"}</span>
+                    <span className={p.status === "active" ? "rounded-full bg-accent px-2.5 py-1 font-semibold text-primary" : "rounded-full bg-muted px-2.5 py-1 font-semibold text-muted-foreground"}>{p.status === "active" ? "Активен" : "Чернова"}</span>
+                  </div>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <Button variant="ghost" size="icon" aria-label="Редактирай" asChild><Link to="/dashboard/products/new"><Pencil /></Link></Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild><Button variant="ghost" size="icon" aria-label="Изтрий"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger>
+                    <AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Изтриване на „{p.name}“?</AlertDialogTitle><AlertDialogDescription>Продуктът ще бъде премахнат от профила ви.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Отказ</AlertDialogCancel><AlertDialogAction onClick={() => { setList((l) => l.filter((x) => x.id !== p.id)); toast.success("Продуктът е изтрит"); }}>Изтрий</AlertDialogAction></AlertDialogFooter></AlertDialogContent>
+                  </AlertDialog>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+        <div className="card-soft hidden overflow-x-auto md:block">
           <Table>
             <TableHeader><TableRow><TableHead>Продукт</TableHead><TableHead>Цена</TableHead><TableHead>Наличност</TableHead><TableHead>Статус</TableHead><TableHead className="text-right">Действия</TableHead></TableRow></TableHeader>
             <TableBody>
@@ -45,6 +70,7 @@ function MyProducts() {
             </TableBody>
           </Table>
         </div>
+        </>
       )}
     </>
   );
