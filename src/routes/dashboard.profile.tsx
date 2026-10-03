@@ -10,7 +10,7 @@ import { producers } from "@/lib/mock-data";
 export const Route = createFileRoute("/dashboard/profile")({ component: Profile });
 
 function Profile() {
-  const p = producers[0];
+  const p = producers[0]!;
   return (
     <>
       <PanelTitle title="Моят профил" action={<Button asChild variant="outline"><Link to="/producers/$id" params={{ id: p.id }}>Виж публичния профил</Link></Button>} />

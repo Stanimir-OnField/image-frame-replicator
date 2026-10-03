@@ -17,8 +17,8 @@ function Inquiries() {
               <img src={p.images[0]} alt="" className="size-16 rounded-xl object-cover" />
               <div className="flex-1">
                 <p className="font-semibold text-forest">{c.with} {c.unread > 0 && <span className="ml-2 rounded-full bg-sun px-2 py-0.5 text-xs font-bold text-sun-foreground">Ново</span>}</p>
-                <p className="text-sm text-muted-foreground">Относно: {p.name} · {c.messages[0].time}</p>
-                <p className="mt-1">{c.messages[0].text}</p>
+                <p className="text-sm text-muted-foreground">Относно: {p.name} · {c.messages[0]?.time}</p>
+                <p className="mt-1">{c.messages[0]?.text}</p>
               </div>
               <Button asChild variant="outline"><Link to="/dashboard/messages">Отговори</Link></Button>
             </div>

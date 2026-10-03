@@ -10,7 +10,7 @@ export function PanelLayout({ title, subtitle, items }: { title: string; subtitl
         <div className="mb-4 hidden lg:block"><p className="font-display text-xl font-semibold text-forest">{title}</p><p className="text-sm text-muted-foreground">{subtitle}</p></div>
         <nav className="-mx-4 flex gap-1 overflow-x-auto px-4 pb-2 lg:mx-0 lg:flex-col lg:px-0" aria-label={title}>
           {items.map((i) => (
-            <Link key={i.to} to={i.to} activeOptions={{ exact: i.exact }}
+            <Link key={i.to} to={i.to} activeOptions={{ exact: !!i.exact }}
               className="flex shrink-0 items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition hover:bg-cream"
               activeProps={{ className: "bg-accent text-forest font-semibold" }}>
               <i.icon className="size-4" />{i.label}

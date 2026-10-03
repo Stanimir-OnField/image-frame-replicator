@@ -78,7 +78,7 @@ function ProducerPage() {
             <ul className="card-soft max-w-xl divide-y divide-border">
               {[[MapPin, p.location], [Phone, p.phone], [Mail, p.email], ...(p.website ? [[Globe, p.website]] : [])].map(([I, v], i) => {
                 const Icon = I as typeof MapPin;
-                return <li key={i} className="flex items-center gap-3 p-4"><Icon className="size-5 text-primary" />{v as string}</li>;
+                return <li key={i} className="flex items-center gap-3 p-4"><Icon className="size-5 text-primary" />{String(v)}</li>;
               })}
             </ul>
           </TabsContent>

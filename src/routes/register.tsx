@@ -7,10 +7,10 @@ import { Label } from "@/components/ui/label";
 import { AuthCard } from "@/components/site/AuthCard";
 import { cn } from "@/lib/utils";
 
-type S = { type?: "customer" | "producer" };
+type S = { type?: "customer" | "producer" | undefined };
 
 export const Route = createFileRoute("/register")({
-  validateSearch: (s: Record<string, unknown>): S => ({ type: s.type === "producer" ? "producer" : s.type === "customer" ? "customer" : undefined }),
+  validateSearch: (s: { type?: unknown }): S => ({ type: s.type === "producer" ? "producer" : s.type === "customer" ? "customer" : undefined }),
   head: () => ({ meta: [
     { title: "Регистрация – От Полето" }, { name: "description", content: "Създай безплатен профил като клиент или производител." },
     { property: "og:title", content: "Регистрация – От Полето" }, { property: "og:description", content: "Безплатна регистрация." },

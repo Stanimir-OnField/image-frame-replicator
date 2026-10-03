@@ -17,10 +17,10 @@ import { deliveryLabels } from "@/lib/format";
 import type { DeliveryMethod, ProductFilters } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-type Search = ProductFilters & { view?: "grid" | "list" };
+type Search = ProductFilters & { view?: "grid" | "list" | undefined };
 
 export const Route = createFileRoute("/products/")({
-  validateSearch: (s: Record<string, unknown>): Search => ({
+  validateSearch: (s: Partial<Record<keyof Search, unknown>>): Search => ({
     q: (s.q as string) || undefined,
     category: (s.category as string) || undefined,
     location: (s.location as string) || undefined,

@@ -31,7 +31,7 @@ function Overview() {
           <div className="mb-4 flex justify-between"><h2 className="text-xl font-semibold">Последни запитвания</h2><Link to="/dashboard/inquiries" className="text-sm font-semibold text-primary">Всички</Link></div>
           <ul className="divide-y divide-border">
             {conversations.map((c) => (
-              <li key={c.id} className="flex items-center gap-3 py-3"><img src={c.avatar} alt="" className="size-10 rounded-full object-cover" /><div className="min-w-0 flex-1"><p className="font-medium">{c.with}</p><p className="truncate text-sm text-muted-foreground">{c.messages[0].text}</p></div>{c.unread > 0 && <span className="rounded-full bg-sun px-2 py-0.5 text-xs font-bold text-sun-foreground">Ново</span>}</li>
+              <li key={c.id} className="flex items-center gap-3 py-3"><img src={c.avatar} alt="" className="size-10 rounded-full object-cover" /><div className="min-w-0 flex-1"><p className="font-medium">{c.with}</p><p className="truncate text-sm text-muted-foreground">{c.messages[0]?.text}</p></div>{c.unread > 0 && <span className="rounded-full bg-sun px-2 py-0.5 text-xs font-bold text-sun-foreground">Ново</span>}</li>
             ))}
           </ul>
         </div>
