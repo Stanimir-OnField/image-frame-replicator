@@ -27,7 +27,7 @@ function Overview() {
         ))}
       </div>
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
-        <div className="card-soft p-4 sm:p-6">
+        <div className="card-soft min-w-0 p-4 sm:p-6">
           <div className="mb-4 grid grid-cols-[minmax(0,1fr)_auto] gap-3"><h2 className="text-xl font-semibold">Последни запитвания</h2><Link to="/dashboard/inquiries" className="text-sm font-semibold text-primary">Всички</Link></div>
           <ul className="divide-y divide-border">
             {conversations.map((c) => (
@@ -35,7 +35,7 @@ function Overview() {
             ))}
           </ul>
         </div>
-        <div className="card-soft p-4 sm:p-6">
+        <div className="card-soft min-w-0 p-4 sm:p-6">
           <div className="mb-4 grid grid-cols-[minmax(0,1fr)_auto] gap-3"><h2 className="text-xl font-semibold">Най-гледани продукти</h2><Link to="/dashboard/products" className="text-sm font-semibold text-primary">Всички</Link></div>
           <ul className="divide-y divide-border">
             {products.filter((p) => p.producerId === "zelenata-dolina").map((p, i) => (
