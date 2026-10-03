@@ -6,7 +6,7 @@ import type { ProductFilters } from "./types";
  * Data access layer. Today every call resolves mock data; later swap the body of
  * `request` for `fetch(`${API_BASE_URL}${path}`)` against the Rails REST API.
  */
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000/api/v1";
+export const API_BASE_URL = import.meta.env["VITE_API_BASE_URL"] ?? "http://localhost:3000/api/v1";
 const delay = (ms = 350) => new Promise((r) => setTimeout(r, ms));
 
 async function request<T>(_path: string, resolver: () => T): Promise<T> {

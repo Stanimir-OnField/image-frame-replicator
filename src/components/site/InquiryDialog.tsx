@@ -21,7 +21,7 @@ export function InquiryDialog({ to, product, children }: { to: string; product?:
           className="space-y-4"
           onSubmit={(e) => {
             e.preventDefault();
-            if (text.trim().length < 10) return toast.error("Моля, напишете малко повече в съобщението.");
+            if (text.trim().length < 10) { toast.error("Моля, напишете малко повече в съобщението."); return; }
             setOpen(false);
             toast.success("Запитването е изпратено!", { description: `${to} ще ви отговори скоро.` });
           }}

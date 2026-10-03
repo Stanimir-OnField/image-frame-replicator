@@ -58,7 +58,7 @@ function ProducerPage() {
 
         <Tabs defaultValue="about" className="mt-10">
           <TabsList className="h-auto flex-wrap justify-start gap-1 rounded-full bg-cream p-1">
-            {[["about", "За производителя"], ["products", `Продукти (${products.length})`], ["delivery", "Доставка и получаване"], ["contacts", "Контакти"], ["reviews", "Отзиви"]].map(([v, l]) => (
+            {([["about", "За производителя"], ["products", `Продукти (${products.length})`], ["delivery", "Доставка и получаване"], ["contacts", "Контакти"], ["reviews", "Отзиви"]] as const).map(([v, l]) => (
               <TabsTrigger key={v} value={v} className="rounded-full px-4 py-2">{l}</TabsTrigger>
             ))}
           </TabsList>
@@ -78,7 +78,7 @@ function ProducerPage() {
             <ul className="card-soft max-w-xl divide-y divide-border">
               {[[MapPin, p.location], [Phone, p.phone], [Mail, p.email], ...(p.website ? [[Globe, p.website]] : [])].map(([I, v], i) => {
                 const Icon = I as typeof MapPin;
-                return <li key={i} className="flex items-center gap-3 p-4"><Icon className="size-5 text-primary" />{v as string}</li>;
+                return <li key={i} className="flex items-center gap-3 p-4"><Icon className="size-5 text-primary" />{String(v)}</li>;
               })}
             </ul>
           </TabsContent>

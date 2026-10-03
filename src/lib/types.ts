@@ -71,13 +71,13 @@ export interface Conversation {
 }
 
 export interface ProductFilters {
-  q?: string;
-  category?: string;
-  location?: string;
-  producer?: string;
-  delivery?: DeliveryMethod[];
-  minRating?: number;
-  maxPrice?: number;
-  sort?: "popular" | "rating" | "price_asc" | "price_desc" | "newest";
-  page?: number;
+  q?: string | undefined;
+  category?: string | undefined;
+  location?: string | undefined;
+  producer?: string | undefined;
+  delivery?: DeliveryMethod[] | undefined;
+  minRating?: number | undefined;
+  maxPrice?: number | undefined;
+  sort?: "popular" | "rating" | "price_asc" | "price_desc" | "newest" | undefined;
+  page?: number | undefined;
 }

@@ -17,10 +17,10 @@ import { deliveryLabels } from "@/lib/format";
 import type { DeliveryMethod, ProductFilters } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-type Search = ProductFilters & { view?: "grid" | "list" };
+type Search = ProductFilters & { view?: "grid" | "list" | undefined };
 
 export const Route = createFileRoute("/products/")({
-  validateSearch: (s: Record<string, unknown>): Search => ({
+  validateSearch: (s: Partial<Record<keyof Search, unknown>>): Search => ({
     q: (s.q as string) || undefined,
     category: (s.category as string) || undefined,
     location: (s.location as string) || undefined,
@@ -53,9 +53,9 @@ function Filters({ s, set }: { s: Search; set: (p: Partial<Search>) => void }) {
         <Input id="f-q" defaultValue={s.q} placeholder="Напр. мед" onKeyDown={(e) => e.key === "Enter" && set({ q: (e.target as HTMLInputElement).value || undefined })} onBlur={(e) => set({ q: e.target.value || undefined })} />
       </div>
       {[
-        { label: "Категория", key: "category" as const, opts: categories.map((c) => [c.slug, c.name]) },
-        { label: "Населено място", key: "location" as const, opts: locations.map((l) => [l, l]) },
-        { label: "Производител", key: "producer" as const, opts: producers.map((p) => [p.id, p.name]) },
+        { label: "Категория", key: "category" as const, opts: categories.map((c) => [c.slug, c.name] as const) },
+        { label: "Населено място", key: "location" as const, opts: locations.map((l) => [l, l] as const) },
+        { label: "Производител", key: "producer" as const, opts: producers.map((p) => [p.id, p.name] as const) },
       ].map((f) => (
         <div key={f.key} className="space-y-2">
           <Label>{f.label}</Label>

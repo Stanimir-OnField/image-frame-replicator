@@ -10,16 +10,40 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AccountRouteImport } from './routes/account'
 import { Route as CategoriesRouteImport } from './routes/categories'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as RegisterRouteImport } from './routes/register'
+import { Route as AccountIndexRouteImport } from './routes/account.index'
+import { Route as AccountFavoritesRouteImport } from './routes/account.favorites'
+import { Route as AccountInquiriesRouteImport } from './routes/account.inquiries'
+import { Route as AccountMessagesRouteImport } from './routes/account.messages'
+import { Route as AccountReviewsRouteImport } from './routes/account.reviews'
+import { Route as AccountSettingsRouteImport } from './routes/account.settings'
+import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
+import { Route as DashboardInquiriesRouteImport } from './routes/dashboard.inquiries'
+import { Route as DashboardMessagesRouteImport } from './routes/dashboard.messages'
+import { Route as DashboardProfileRouteImport } from './routes/dashboard.profile'
+import { Route as DashboardReviewsRouteImport } from './routes/dashboard.reviews'
+import { Route as DashboardSettingsRouteImport } from './routes/dashboard.settings'
 import { Route as ProducersIndexRouteImport } from './routes/producers.index'
 import { Route as ProducersIdRouteImport } from './routes/producers.$id'
 import { Route as ProductsIndexRouteImport } from './routes/products.index'
 import { Route as ProductsIdRouteImport } from './routes/products.$id'
+import { Route as DashboardProductsIndexRouteImport } from './routes/dashboard.products.index'
+import { Route as DashboardProductsNewRouteImport } from './routes/dashboard.products.new'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountRoute = AccountRouteImport.update({
+  id: '/account',
+  path: '/account',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CategoriesRoute = CategoriesRouteImport.update({
@@ -27,10 +51,90 @@ const CategoriesRoute = CategoriesRouteImport.update({
   path: '/categories',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HowItWorksRoute = HowItWorksRouteImport.update({
   id: '/how-it-works',
   path: '/how-it-works',
   getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountIndexRoute = AccountIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AccountRoute,
+} as any)
+const AccountFavoritesRoute = AccountFavoritesRouteImport.update({
+  id: '/favorites',
+  path: '/favorites',
+  getParentRoute: () => AccountRoute,
+} as any)
+const AccountInquiriesRoute = AccountInquiriesRouteImport.update({
+  id: '/inquiries',
+  path: '/inquiries',
+  getParentRoute: () => AccountRoute,
+} as any)
+const AccountMessagesRoute = AccountMessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => AccountRoute,
+} as any)
+const AccountReviewsRoute = AccountReviewsRouteImport.update({
+  id: '/reviews',
+  path: '/reviews',
+  getParentRoute: () => AccountRoute,
+} as any)
+const AccountSettingsRoute = AccountSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AccountRoute,
+} as any)
+const DashboardIndexRoute = DashboardIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardInquiriesRoute = DashboardInquiriesRouteImport.update({
+  id: '/inquiries',
+  path: '/inquiries',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardMessagesRoute = DashboardMessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardProfileRoute = DashboardProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardReviewsRoute = DashboardReviewsRouteImport.update({
+  id: '/reviews',
+  path: '/reviews',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardSettingsRoute = DashboardSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => DashboardRoute,
 } as any)
 const ProducersIndexRoute = ProducersIndexRouteImport.update({
   id: '/producers/',
@@ -52,69 +156,194 @@ const ProductsIdRoute = ProductsIdRouteImport.update({
   path: '/products/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardProductsIndexRoute = DashboardProductsIndexRouteImport.update({
+  id: '/products/',
+  path: '/products/',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardProductsNewRoute = DashboardProductsNewRouteImport.update({
+  id: '/products/new',
+  path: '/products/new',
+  getParentRoute: () => DashboardRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/account': typeof AccountRouteWithChildren
   '/categories': typeof CategoriesRoute
+  '/dashboard': typeof DashboardRouteWithChildren
+  '/forgot-password': typeof ForgotPasswordRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/account/favorites': typeof AccountFavoritesRoute
+  '/account/inquiries': typeof AccountInquiriesRoute
+  '/account/messages': typeof AccountMessagesRoute
+  '/account/reviews': typeof AccountReviewsRoute
+  '/account/settings': typeof AccountSettingsRoute
+  '/dashboard/inquiries': typeof DashboardInquiriesRoute
+  '/dashboard/messages': typeof DashboardMessagesRoute
+  '/dashboard/profile': typeof DashboardProfileRoute
+  '/dashboard/reviews': typeof DashboardReviewsRoute
+  '/dashboard/settings': typeof DashboardSettingsRoute
   '/producers/$id': typeof ProducersIdRoute
   '/products/$id': typeof ProductsIdRoute
+  '/account/': typeof AccountIndexRoute
+  '/dashboard/': typeof DashboardIndexRoute
   '/producers/': typeof ProducersIndexRoute
   '/products/': typeof ProductsIndexRoute
+  '/dashboard/products/new': typeof DashboardProductsNewRoute
+  '/dashboard/products/': typeof DashboardProductsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/categories': typeof CategoriesRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/account/favorites': typeof AccountFavoritesRoute
+  '/account/inquiries': typeof AccountInquiriesRoute
+  '/account/messages': typeof AccountMessagesRoute
+  '/account/reviews': typeof AccountReviewsRoute
+  '/account/settings': typeof AccountSettingsRoute
+  '/dashboard/inquiries': typeof DashboardInquiriesRoute
+  '/dashboard/messages': typeof DashboardMessagesRoute
+  '/dashboard/profile': typeof DashboardProfileRoute
+  '/dashboard/reviews': typeof DashboardReviewsRoute
+  '/dashboard/settings': typeof DashboardSettingsRoute
   '/producers/$id': typeof ProducersIdRoute
   '/products/$id': typeof ProductsIdRoute
+  '/account': typeof AccountIndexRoute
+  '/dashboard': typeof DashboardIndexRoute
   '/producers': typeof ProducersIndexRoute
   '/products': typeof ProductsIndexRoute
+  '/dashboard/products/new': typeof DashboardProductsNewRoute
+  '/dashboard/products': typeof DashboardProductsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/account': typeof AccountRouteWithChildren
   '/categories': typeof CategoriesRoute
+  '/dashboard': typeof DashboardRouteWithChildren
+  '/forgot-password': typeof ForgotPasswordRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/account/favorites': typeof AccountFavoritesRoute
+  '/account/inquiries': typeof AccountInquiriesRoute
+  '/account/messages': typeof AccountMessagesRoute
+  '/account/reviews': typeof AccountReviewsRoute
+  '/account/settings': typeof AccountSettingsRoute
+  '/dashboard/inquiries': typeof DashboardInquiriesRoute
+  '/dashboard/messages': typeof DashboardMessagesRoute
+  '/dashboard/profile': typeof DashboardProfileRoute
+  '/dashboard/reviews': typeof DashboardReviewsRoute
+  '/dashboard/settings': typeof DashboardSettingsRoute
   '/producers/$id': typeof ProducersIdRoute
   '/products/$id': typeof ProductsIdRoute
+  '/account/': typeof AccountIndexRoute
+  '/dashboard/': typeof DashboardIndexRoute
   '/producers/': typeof ProducersIndexRoute
   '/products/': typeof ProductsIndexRoute
+  '/dashboard/products/new': typeof DashboardProductsNewRoute
+  '/dashboard/products/': typeof DashboardProductsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/account'
     | '/categories'
+    | '/dashboard'
+    | '/forgot-password'
     | '/how-it-works'
+    | '/login'
+    | '/register'
+    | '/account/favorites'
+    | '/account/inquiries'
+    | '/account/messages'
+    | '/account/reviews'
+    | '/account/settings'
+    | '/dashboard/inquiries'
+    | '/dashboard/messages'
+    | '/dashboard/profile'
+    | '/dashboard/reviews'
+    | '/dashboard/settings'
     | '/producers/$id'
     | '/products/$id'
+    | '/account/'
+    | '/dashboard/'
     | '/producers/'
     | '/products/'
+    | '/dashboard/products/new'
+    | '/dashboard/products/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/categories'
+    | '/forgot-password'
     | '/how-it-works'
+    | '/login'
+    | '/register'
+    | '/account/favorites'
+    | '/account/inquiries'
+    | '/account/messages'
+    | '/account/reviews'
+    | '/account/settings'
+    | '/dashboard/inquiries'
+    | '/dashboard/messages'
+    | '/dashboard/profile'
+    | '/dashboard/reviews'
+    | '/dashboard/settings'
     | '/producers/$id'
     | '/products/$id'
+    | '/account'
+    | '/dashboard'
     | '/producers'
     | '/products'
+    | '/dashboard/products/new'
+    | '/dashboard/products'
   id:
     | '__root__'
     | '/'
+    | '/account'
     | '/categories'
+    | '/dashboard'
+    | '/forgot-password'
     | '/how-it-works'
+    | '/login'
+    | '/register'
+    | '/account/favorites'
+    | '/account/inquiries'
+    | '/account/messages'
+    | '/account/reviews'
+    | '/account/settings'
+    | '/dashboard/inquiries'
+    | '/dashboard/messages'
+    | '/dashboard/profile'
+    | '/dashboard/reviews'
+    | '/dashboard/settings'
     | '/producers/$id'
     | '/products/$id'
+    | '/account/'
+    | '/dashboard/'
     | '/producers/'
     | '/products/'
+    | '/dashboard/products/new'
+    | '/dashboard/products/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AccountRoute: typeof AccountRouteWithChildren
   CategoriesRoute: typeof CategoriesRoute
+  DashboardRoute: typeof DashboardRouteWithChildren
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
   HowItWorksRoute: typeof HowItWorksRoute
+  LoginRoute: typeof LoginRoute
+  RegisterRoute: typeof RegisterRoute
   ProducersIdRoute: typeof ProducersIdRoute
   ProductsIdRoute: typeof ProductsIdRoute
   ProducersIndexRoute: typeof ProducersIndexRoute
@@ -130,11 +359,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/categories': {
       id: '/categories'
       path: '/categories'
       fullPath: '/categories'
       preLoaderRoute: typeof CategoriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/how-it-works': {
@@ -143,6 +393,104 @@ declare module '@tanstack/react-router' {
       fullPath: '/how-it-works'
       preLoaderRoute: typeof HowItWorksRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account/': {
+      id: '/account/'
+      path: '/'
+      fullPath: '/account/'
+      preLoaderRoute: typeof AccountIndexRouteImport
+      parentRoute: typeof AccountRoute
+    }
+    '/account/favorites': {
+      id: '/account/favorites'
+      path: '/favorites'
+      fullPath: '/account/favorites'
+      preLoaderRoute: typeof AccountFavoritesRouteImport
+      parentRoute: typeof AccountRoute
+    }
+    '/account/inquiries': {
+      id: '/account/inquiries'
+      path: '/inquiries'
+      fullPath: '/account/inquiries'
+      preLoaderRoute: typeof AccountInquiriesRouteImport
+      parentRoute: typeof AccountRoute
+    }
+    '/account/messages': {
+      id: '/account/messages'
+      path: '/messages'
+      fullPath: '/account/messages'
+      preLoaderRoute: typeof AccountMessagesRouteImport
+      parentRoute: typeof AccountRoute
+    }
+    '/account/reviews': {
+      id: '/account/reviews'
+      path: '/reviews'
+      fullPath: '/account/reviews'
+      preLoaderRoute: typeof AccountReviewsRouteImport
+      parentRoute: typeof AccountRoute
+    }
+    '/account/settings': {
+      id: '/account/settings'
+      path: '/settings'
+      fullPath: '/account/settings'
+      preLoaderRoute: typeof AccountSettingsRouteImport
+      parentRoute: typeof AccountRoute
+    }
+    '/dashboard/': {
+      id: '/dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/inquiries': {
+      id: '/dashboard/inquiries'
+      path: '/inquiries'
+      fullPath: '/dashboard/inquiries'
+      preLoaderRoute: typeof DashboardInquiriesRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/messages': {
+      id: '/dashboard/messages'
+      path: '/messages'
+      fullPath: '/dashboard/messages'
+      preLoaderRoute: typeof DashboardMessagesRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/profile': {
+      id: '/dashboard/profile'
+      path: '/profile'
+      fullPath: '/dashboard/profile'
+      preLoaderRoute: typeof DashboardProfileRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/reviews': {
+      id: '/dashboard/reviews'
+      path: '/reviews'
+      fullPath: '/dashboard/reviews'
+      preLoaderRoute: typeof DashboardReviewsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/settings': {
+      id: '/dashboard/settings'
+      path: '/settings'
+      fullPath: '/dashboard/settings'
+      preLoaderRoute: typeof DashboardSettingsRouteImport
+      parentRoute: typeof DashboardRoute
     }
     '/producers/': {
       id: '/producers/'
@@ -172,13 +520,79 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/products/': {
+      id: '/dashboard/products/'
+      path: '/products'
+      fullPath: '/dashboard/products/'
+      preLoaderRoute: typeof DashboardProductsIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/products/new': {
+      id: '/dashboard/products/new'
+      path: '/products/new'
+      fullPath: '/dashboard/products/new'
+      preLoaderRoute: typeof DashboardProductsNewRouteImport
+      parentRoute: typeof DashboardRoute
+    }
   }
 }
 
+interface AccountRouteChildren {
+  AccountFavoritesRoute: typeof AccountFavoritesRoute
+  AccountInquiriesRoute: typeof AccountInquiriesRoute
+  AccountMessagesRoute: typeof AccountMessagesRoute
+  AccountReviewsRoute: typeof AccountReviewsRoute
+  AccountSettingsRoute: typeof AccountSettingsRoute
+  AccountIndexRoute: typeof AccountIndexRoute
+}
+
+const AccountRouteChildren: AccountRouteChildren = {
+  AccountFavoritesRoute: AccountFavoritesRoute,
+  AccountInquiriesRoute: AccountInquiriesRoute,
+  AccountMessagesRoute: AccountMessagesRoute,
+  AccountReviewsRoute: AccountReviewsRoute,
+  AccountSettingsRoute: AccountSettingsRoute,
+  AccountIndexRoute: AccountIndexRoute,
+}
+
+const AccountRouteWithChildren =
+  AccountRoute._addFileChildren(AccountRouteChildren)
+
+interface DashboardRouteChildren {
+  DashboardInquiriesRoute: typeof DashboardInquiriesRoute
+  DashboardMessagesRoute: typeof DashboardMessagesRoute
+  DashboardProfileRoute: typeof DashboardProfileRoute
+  DashboardReviewsRoute: typeof DashboardReviewsRoute
+  DashboardSettingsRoute: typeof DashboardSettingsRoute
+  DashboardIndexRoute: typeof DashboardIndexRoute
+  DashboardProductsNewRoute: typeof DashboardProductsNewRoute
+  DashboardProductsIndexRoute: typeof DashboardProductsIndexRoute
+}
+
+const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardInquiriesRoute: DashboardInquiriesRoute,
+  DashboardMessagesRoute: DashboardMessagesRoute,
+  DashboardProfileRoute: DashboardProfileRoute,
+  DashboardReviewsRoute: DashboardReviewsRoute,
+  DashboardSettingsRoute: DashboardSettingsRoute,
+  DashboardIndexRoute: DashboardIndexRoute,
+  DashboardProductsNewRoute: DashboardProductsNewRoute,
+  DashboardProductsIndexRoute: DashboardProductsIndexRoute,
+}
+
+const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
+  DashboardRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AccountRoute: AccountRouteWithChildren,
   CategoriesRoute: CategoriesRoute,
+  DashboardRoute: DashboardRouteWithChildren,
+  ForgotPasswordRoute: ForgotPasswordRoute,
   HowItWorksRoute: HowItWorksRoute,
+  LoginRoute: LoginRoute,
+  RegisterRoute: RegisterRoute,
   ProducersIdRoute: ProducersIdRoute,
   ProductsIdRoute: ProductsIdRoute,
   ProducersIndexRoute: ProducersIndexRoute,
