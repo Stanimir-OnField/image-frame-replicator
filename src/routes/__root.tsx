@@ -3,6 +3,7 @@ import {
   Outlet,
   Link,
   createRootRouteWithContext,
+  useRouterState,
   useRouter,
   HeadContent,
   Scripts,
@@ -121,16 +122,17 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const isMarketing = useRouterState({ select: (state) => state.location.pathname === "/marketing" });
 
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <div className="flex min-h-screen flex-col">
-        <SiteHeader />
+        {!isMarketing && <SiteHeader />}
         <main className="flex-1">
           <Outlet />
         </main>
-        <SiteFooter />
+        {!isMarketing && <SiteFooter />}
       </div>
       <Toaster position="top-center" richColors />
     </QueryClientProvider>
