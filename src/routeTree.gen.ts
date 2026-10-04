@@ -16,6 +16,7 @@ import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as MarketingRouteImport } from './routes/marketing'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as AccountIndexRouteImport } from './routes/account.index'
 import { Route as AccountFavoritesRouteImport } from './routes/account.favorites'
@@ -69,6 +70,11 @@ const HowItWorksRoute = HowItWorksRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarketingRoute = MarketingRouteImport.update({
+  id: '/marketing',
+  path: '/marketing',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RegisterRoute = RegisterRouteImport.update({
@@ -175,6 +181,7 @@ export interface FileRoutesByFullPath {
   '/forgot-password': typeof ForgotPasswordRoute
   '/how-it-works': typeof HowItWorksRoute
   '/login': typeof LoginRoute
+  '/marketing': typeof MarketingRoute
   '/register': typeof RegisterRoute
   '/account/favorites': typeof AccountFavoritesRoute
   '/account/inquiries': typeof AccountInquiriesRoute
@@ -201,6 +208,7 @@ export interface FileRoutesByTo {
   '/forgot-password': typeof ForgotPasswordRoute
   '/how-it-works': typeof HowItWorksRoute
   '/login': typeof LoginRoute
+  '/marketing': typeof MarketingRoute
   '/register': typeof RegisterRoute
   '/account/favorites': typeof AccountFavoritesRoute
   '/account/inquiries': typeof AccountInquiriesRoute
@@ -230,6 +238,7 @@ export interface FileRoutesById {
   '/forgot-password': typeof ForgotPasswordRoute
   '/how-it-works': typeof HowItWorksRoute
   '/login': typeof LoginRoute
+  '/marketing': typeof MarketingRoute
   '/register': typeof RegisterRoute
   '/account/favorites': typeof AccountFavoritesRoute
   '/account/inquiries': typeof AccountInquiriesRoute
@@ -260,6 +269,7 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/how-it-works'
     | '/login'
+    | '/marketing'
     | '/register'
     | '/account/favorites'
     | '/account/inquiries'
@@ -286,6 +296,7 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/how-it-works'
     | '/login'
+    | '/marketing'
     | '/register'
     | '/account/favorites'
     | '/account/inquiries'
@@ -314,6 +325,7 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/how-it-works'
     | '/login'
+    | '/marketing'
     | '/register'
     | '/account/favorites'
     | '/account/inquiries'
@@ -343,6 +355,7 @@ export interface RootRouteChildren {
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   HowItWorksRoute: typeof HowItWorksRoute
   LoginRoute: typeof LoginRoute
+  MarketingRoute: typeof MarketingRoute
   RegisterRoute: typeof RegisterRoute
   ProducersIdRoute: typeof ProducersIdRoute
   ProductsIdRoute: typeof ProductsIdRoute
@@ -399,6 +412,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/marketing': {
+      id: '/marketing'
+      path: '/marketing'
+      fullPath: '/marketing'
+      preLoaderRoute: typeof MarketingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/register': {
@@ -592,6 +612,7 @@ const rootRouteChildren: RootRouteChildren = {
   ForgotPasswordRoute: ForgotPasswordRoute,
   HowItWorksRoute: HowItWorksRoute,
   LoginRoute: LoginRoute,
+  MarketingRoute: MarketingRoute,
   RegisterRoute: RegisterRoute,
   ProducersIdRoute: ProducersIdRoute,
   ProductsIdRoute: ProductsIdRoute,
