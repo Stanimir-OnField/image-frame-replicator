@@ -15,7 +15,7 @@ import {
   Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Logo, Price, Stars } from "@/components/site/bits";
 import { images, producers, products } from "@/lib/mock-data";
 
@@ -48,7 +48,7 @@ function MarketingHeader() {
     window.setTimeout(() => {
       window.history.replaceState(null, "", href);
       document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
-    }, 200);
+    }, 350);
   };
 
   return (
@@ -67,7 +67,7 @@ function MarketingHeader() {
           <SheetContent side="right" className="w-[min(20rem,88vw)]">
             <SheetHeader><SheetTitle><Logo /></SheetTitle></SheetHeader>
             <nav className="mt-6 flex flex-col gap-2 px-4">
-              {marketingNav.map((item) => <SheetClose key={item.href} asChild><a href={item.href} onClick={(event) => { event.preventDefault(); goToSection(item.href); }} className="rounded-xl px-3 py-3 font-medium hover:bg-cream">{item.label}</a></SheetClose>)}
+              {marketingNav.map((item) => <a key={item.href} href={item.href} onClick={(event) => { event.preventDefault(); goToSection(item.href); }} className="rounded-xl px-3 py-3 font-medium hover:bg-cream">{item.label}</a>)}
               <Button asChild variant="outline" className="mt-4"><Link to="/login">Вход</Link></Button>
               <Button asChild variant="sun"><Link to="/products">Разгледай продуктите</Link></Button>
             </nav>
