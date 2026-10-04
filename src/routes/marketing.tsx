@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
 import {
   ArrowRight,
   BadgeCheck,
@@ -41,6 +42,15 @@ const marketingNav = [
 ] as const;
 
 function MarketingHeader() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const goToSection = (href: string) => {
+    setMenuOpen(false);
+    window.setTimeout(() => {
+      window.history.replaceState(null, "", href);
+      document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
+    }, 200);
+  };
+
   return (
     <header className="absolute inset-x-0 top-0 z-30 border-b border-primary-foreground/15 text-primary-foreground">
       <div className="container-page grid h-20 grid-cols-[minmax(0,1fr)_auto] items-center gap-4 lg:flex lg:justify-between">
@@ -52,12 +62,12 @@ function MarketingHeader() {
           <Button asChild variant="ghost" className="text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"><Link to="/login">Вход</Link></Button>
           <Button asChild variant="sun"><Link to="/products">Разгледай продуктите <ArrowRight /></Link></Button>
         </div>
-        <Sheet>
+        <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
           <SheetTrigger asChild><Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground lg:hidden" aria-label="Отвори менюто"><Menu /></Button></SheetTrigger>
           <SheetContent side="right" className="w-[min(20rem,88vw)]">
             <SheetHeader><SheetTitle><Logo /></SheetTitle></SheetHeader>
             <nav className="mt-6 flex flex-col gap-2 px-4">
-              {marketingNav.map((item) => <SheetClose key={item.href} asChild><a href={item.href} className="rounded-xl px-3 py-3 font-medium hover:bg-cream">{item.label}</a></SheetClose>)}
+              {marketingNav.map((item) => <SheetClose key={item.href} asChild><a href={item.href} onClick={(event) => { event.preventDefault(); goToSection(item.href); }} className="rounded-xl px-3 py-3 font-medium hover:bg-cream">{item.label}</a></SheetClose>)}
               <Button asChild variant="outline" className="mt-4"><Link to="/login">Вход</Link></Button>
               <Button asChild variant="sun"><Link to="/products">Разгледай продуктите</Link></Button>
             </nav>
