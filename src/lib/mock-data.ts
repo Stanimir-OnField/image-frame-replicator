@@ -20,11 +20,11 @@ export const categories: Category[] = [
   { slug: "hlyab", name: "Хляб и печива", image: bread, count: 35 },
   { slug: "vino", name: "Вино и напитки", image: bread, count: 47 },
   { slug: "domashni", name: "Домашни продукти", image: tomatoes, count: 112 },
-];
+].map((category) => ({ ...category, id: category.slug }));
 
 export const locations = ["София", "Пловдив", "Смолян", "Велико Търново", "Варна", "Стара Загора", "Бургас"];
 
-export const producers: Producer[] = [
+export const producers: Producer[] = ([
   {
     id: "zelenata-dolina", name: "Ферма Зелената Долина", location: "с. Брестник, Пловдив", region: "Пловдив",
     description: "Сезонни зеленчуци, отгледани без пестициди в подножието на Родопите.",
@@ -65,9 +65,25 @@ export const producers: Producer[] = [
     delivery: ["pickup", "delivery"], verified: true, phone: "+359 886 102 030", email: "furna@sz.bg",
     pickupInfo: "Всеки ден 7:00–13:00.",
   },
-];
+] as Array<Omit<Producer, "categoryNames" | "slug" | "latitude" | "longitude">>).map((producer) => ({
+  ...producer,
+  slug: producer.id,
+  latitude: null,
+  longitude: null,
+  categoryNames: producer.categories,
+}));
 
-const p = (o: Omit<Product, "images"> & { images?: string[]; img: string }): Product => ({ ...o, images: o.images ?? [o.img, images.vegetables, images.farm] });
+const p = (o: Omit<Product, "slug" | "producerSlug" | "categoryId" | "images" | "producerName" | "producerLocation" | "categoryName" | "viewsCount"> & { images?: string[]; img: string }): Product => ({
+  ...o,
+  slug: o.id,
+  producerSlug: o.producerId,
+  categoryId: o.category,
+  producerName: "",
+  producerLocation: "",
+  categoryName: "",
+  viewsCount: 0,
+  images: o.images ?? [o.img, images.vegetables, images.farm],
+});
 
 export const products: Product[] = [
   p({ id: "rozovi-domati", name: "Розови домати", producerId: "zelenata-dolina", category: "zelenchutsi", price: 2.8, unit: "кг", img: tomatoes, images: [tomatoes, hero, vegetables], rating: 4.9, reviewsCount: 56, delivery: ["delivery", "pickup"], available: true, description: "Сочни розови домати от сорт „Бичи рог“, берани в деня на доставката. Отгледани на открито, без пестициди и изкуствени торове.", createdAt: "2026-09-20" }),
@@ -95,17 +111,17 @@ export const reviews: Review[] = [
 export const reviewDistribution = [72, 18, 6, 3, 1]; // % for 5..1 stars
 
 export const conversations: Conversation[] = [
-  { id: "c1", with: "Мария Петрова", avatar: tomatoes, productId: "rozovi-domati", unread: 2, messages: [
-    { id: "m1", fromMe: false, text: "Здравейте, интересувам се от розовите домати. Имате ли 10 кг за събота?", time: "09:14" },
-    { id: "m2", fromMe: true, text: "Здравейте, Мария! Да, ще ги подготвим. Предпочитате доставка или вземане?", time: "09:30" },
-    { id: "m3", fromMe: false, text: "Вземане от Капана, ако е възможно.", time: "09:42" },
-    { id: "m4", fromMe: false, text: "И около колко часа ще бъдете там?", time: "09:43" },
+  { id: "c1", with: "Мария Петрова", avatar: tomatoes, productId: "rozovi-domati", unread: 2, hasOlderMessages: false, messages: [
+    { id: "m1", fromMe: false, text: "Здравейте, интересувам се от розовите домати. Имате ли 10 кг за събота?", time: "09:14", createdAt: "2026-11-02T09:14:00+02:00" },
+    { id: "m2", fromMe: true, text: "Здравейте, Мария! Да, ще ги подготвим. Предпочитате доставка или вземане?", time: "09:30", createdAt: "2026-11-02T09:30:00+02:00" },
+    { id: "m3", fromMe: false, text: "Вземане от Капана, ако е възможно.", time: "09:42", createdAt: "2026-11-02T09:42:00+02:00" },
+    { id: "m4", fromMe: false, text: "И около колко часа ще бъдете там?", time: "09:43", createdAt: "2026-11-02T09:43:00+02:00" },
   ]},
-  { id: "c2", with: "Георги Димитров", avatar: vegetables, productId: "krastavitsi", unread: 0, messages: [
-    { id: "m1", fromMe: false, text: "Може ли краставици за туршия – около 20 кг?", time: "Вчера" },
-    { id: "m2", fromMe: true, text: "Разбира се, следващата седмица ще имаме.", time: "Вчера" },
+  { id: "c2", with: "Георги Димитров", avatar: vegetables, productId: "krastavitsi", unread: 0, hasOlderMessages: false, messages: [
+    { id: "m1", fromMe: false, text: "Може ли краставици за туршия – около 20 кг?", time: "Вчера", createdAt: "2026-11-01T11:05:00+02:00" },
+    { id: "m2", fromMe: true, text: "Разбира се, следващата седмица ще имаме.", time: "Вчера", createdAt: "2026-11-01T11:20:00+02:00" },
   ]},
-  { id: "c3", with: "Елена Стоянова", avatar: eggs, productId: "chushki", unread: 1, messages: [
-    { id: "m1", fromMe: false, text: "Здравейте, доставяте ли до Пловдив център?", time: "Пон" },
+  { id: "c3", with: "Елена Стоянова", avatar: eggs, productId: "chushki", unread: 1, hasOlderMessages: false, messages: [
+    { id: "m1", fromMe: false, text: "Здравейте, доставяте ли до Пловдив център?", time: "Пон", createdAt: "2026-10-26T16:40:00+02:00" },
   ]},
 ];

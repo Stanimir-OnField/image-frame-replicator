@@ -41,9 +41,10 @@ function Home() {
       <section className="container-page py-14 sm:py-20">
         <SectionHeading eyebrow="Категории" title="Популярни категории" action={<Button asChild variant="link"><Link to="/categories">Всички категории <ArrowRight /></Link></Button>} />
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+          {cats.isError && <p className="col-span-full text-muted-foreground">Не успяхме да заредим категориите.</p>}
           {(cats.data ?? []).slice(0, 9).map((c, i) => (
             <Link key={c.slug} to="/products" search={{ category: c.slug }} className={`hover-lift group relative overflow-hidden rounded-2xl ${i === 0 ? "col-span-2 row-span-2 aspect-square lg:aspect-auto" : "aspect-square"}`}>
-              <img src={c.image} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+              <img src={c.image} alt="" className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105" />
               <div className="absolute inset-0 bg-gradient-to-t from-forest/85 via-forest/10 to-transparent" />
               <div className="absolute bottom-0 p-4">
                  <p className={`font-display font-semibold text-primary-foreground ${i === 0 ? "text-2xl sm:text-3xl" : "text-base sm:text-lg"}`}>{c.name}</p>
@@ -59,7 +60,7 @@ function Home() {
         <div className="container-page">
           <SectionHeading eyebrow="Препоръчани" title="Производители, на които се доверяват" action={<Button asChild variant="link"><Link to="/producers">Всички производители <ArrowRight /></Link></Button>} />
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {prods.isLoading ? Array.from({ length: 4 }).map((_, i) => <CardSkeleton key={i} />) : prods.data!.slice(0, 4).map((p) => <ProducerCard key={p.id} producer={p} />)}
+            {prods.isError ? <p className="text-muted-foreground">Не успяхме да заредим производителите.</p> : prods.isLoading ? Array.from({ length: 4 }).map((_, i) => <CardSkeleton key={i} />) : (prods.data?.items ?? []).slice(0, 4).map((p) => <ProducerCard key={p.id} producer={p} />)}
           </div>
         </div>
       </section>
@@ -67,7 +68,7 @@ function Home() {
       <section className="container-page py-14 sm:py-20">
         <SectionHeading eyebrow="Сезонно" title="Свежо тази седмица" action={<Button asChild variant="link"><Link to="/products">Всички продукти <ArrowRight /></Link></Button>} />
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {items.isLoading ? Array.from({ length: 8 }).map((_, i) => <CardSkeleton key={i} />) : items.data!.items.slice(0, 8).map((p) => <ProductCard key={p.id} product={p} />)}
+          {items.isError ? <p className="text-muted-foreground">Не успяхме да заредим продуктите.</p> : items.isLoading ? Array.from({ length: 8 }).map((_, i) => <CardSkeleton key={i} />) : (items.data?.items ?? []).slice(0, 8).map((p) => <ProductCard key={p.id} product={p} />)}
         </div>
       </section>
 

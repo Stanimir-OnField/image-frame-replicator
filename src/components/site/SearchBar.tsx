@@ -1,11 +1,13 @@
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { MapPin, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { locations } from "@/lib/mock-data";
+import { locationsQuery } from "@/lib/api";
 
 export function SearchBar() {
   const navigate = useNavigate();
+  const locations = useQuery(locationsQuery());
   const [q, setQ] = useState("");
   const [loc, setLoc] = useState("");
   return (
@@ -31,7 +33,7 @@ export function SearchBar() {
           <span className="text-xs font-semibold text-forest">Къде?</span>
           <select value={loc} onChange={(e) => setLoc(e.target.value)} className="w-full bg-transparent text-base text-foreground outline-none">
             <option value="">Цяла България</option>
-            {locations.map((l) => <option key={l} value={l}>{l}</option>)}
+            {(locations.data ?? []).map((l) => <option key={l} value={l}>{l}</option>)}
           </select>
         </span>
       </label>
