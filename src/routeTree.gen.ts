@@ -20,12 +20,10 @@ import { Route as MarketingRouteImport } from './routes/marketing'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as AccountIndexRouteImport } from './routes/account.index'
 import { Route as AccountFavoritesRouteImport } from './routes/account.favorites'
-import { Route as AccountInquiriesRouteImport } from './routes/account.inquiries'
 import { Route as AccountMessagesRouteImport } from './routes/account.messages'
 import { Route as AccountReviewsRouteImport } from './routes/account.reviews'
 import { Route as AccountSettingsRouteImport } from './routes/account.settings'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
-import { Route as DashboardInquiriesRouteImport } from './routes/dashboard.inquiries'
 import { Route as DashboardMessagesRouteImport } from './routes/dashboard.messages'
 import { Route as DashboardProfileRouteImport } from './routes/dashboard.profile'
 import { Route as DashboardReviewsRouteImport } from './routes/dashboard.reviews'
@@ -92,11 +90,6 @@ const AccountFavoritesRoute = AccountFavoritesRouteImport.update({
   path: '/favorites',
   getParentRoute: () => AccountRoute,
 } as any)
-const AccountInquiriesRoute = AccountInquiriesRouteImport.update({
-  id: '/inquiries',
-  path: '/inquiries',
-  getParentRoute: () => AccountRoute,
-} as any)
 const AccountMessagesRoute = AccountMessagesRouteImport.update({
   id: '/messages',
   path: '/messages',
@@ -115,11 +108,6 @@ const AccountSettingsRoute = AccountSettingsRouteImport.update({
 const DashboardIndexRoute = DashboardIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => DashboardRoute,
-} as any)
-const DashboardInquiriesRoute = DashboardInquiriesRouteImport.update({
-  id: '/inquiries',
-  path: '/inquiries',
   getParentRoute: () => DashboardRoute,
 } as any)
 const DashboardMessagesRoute = DashboardMessagesRouteImport.update({
@@ -184,11 +172,9 @@ export interface FileRoutesByFullPath {
   '/marketing': typeof MarketingRoute
   '/register': typeof RegisterRoute
   '/account/favorites': typeof AccountFavoritesRoute
-  '/account/inquiries': typeof AccountInquiriesRoute
   '/account/messages': typeof AccountMessagesRoute
   '/account/reviews': typeof AccountReviewsRoute
   '/account/settings': typeof AccountSettingsRoute
-  '/dashboard/inquiries': typeof DashboardInquiriesRoute
   '/dashboard/messages': typeof DashboardMessagesRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/reviews': typeof DashboardReviewsRoute
@@ -211,11 +197,9 @@ export interface FileRoutesByTo {
   '/marketing': typeof MarketingRoute
   '/register': typeof RegisterRoute
   '/account/favorites': typeof AccountFavoritesRoute
-  '/account/inquiries': typeof AccountInquiriesRoute
   '/account/messages': typeof AccountMessagesRoute
   '/account/reviews': typeof AccountReviewsRoute
   '/account/settings': typeof AccountSettingsRoute
-  '/dashboard/inquiries': typeof DashboardInquiriesRoute
   '/dashboard/messages': typeof DashboardMessagesRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/reviews': typeof DashboardReviewsRoute
@@ -241,11 +225,9 @@ export interface FileRoutesById {
   '/marketing': typeof MarketingRoute
   '/register': typeof RegisterRoute
   '/account/favorites': typeof AccountFavoritesRoute
-  '/account/inquiries': typeof AccountInquiriesRoute
   '/account/messages': typeof AccountMessagesRoute
   '/account/reviews': typeof AccountReviewsRoute
   '/account/settings': typeof AccountSettingsRoute
-  '/dashboard/inquiries': typeof DashboardInquiriesRoute
   '/dashboard/messages': typeof DashboardMessagesRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/reviews': typeof DashboardReviewsRoute
@@ -272,11 +254,9 @@ export interface FileRouteTypes {
     | '/marketing'
     | '/register'
     | '/account/favorites'
-    | '/account/inquiries'
     | '/account/messages'
     | '/account/reviews'
     | '/account/settings'
-    | '/dashboard/inquiries'
     | '/dashboard/messages'
     | '/dashboard/profile'
     | '/dashboard/reviews'
@@ -299,11 +279,9 @@ export interface FileRouteTypes {
     | '/marketing'
     | '/register'
     | '/account/favorites'
-    | '/account/inquiries'
     | '/account/messages'
     | '/account/reviews'
     | '/account/settings'
-    | '/dashboard/inquiries'
     | '/dashboard/messages'
     | '/dashboard/profile'
     | '/dashboard/reviews'
@@ -328,11 +306,9 @@ export interface FileRouteTypes {
     | '/marketing'
     | '/register'
     | '/account/favorites'
-    | '/account/inquiries'
     | '/account/messages'
     | '/account/reviews'
     | '/account/settings'
-    | '/dashboard/inquiries'
     | '/dashboard/messages'
     | '/dashboard/profile'
     | '/dashboard/reviews'
@@ -442,13 +418,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountFavoritesRouteImport
       parentRoute: typeof AccountRoute
     }
-    '/account/inquiries': {
-      id: '/account/inquiries'
-      path: '/inquiries'
-      fullPath: '/account/inquiries'
-      preLoaderRoute: typeof AccountInquiriesRouteImport
-      parentRoute: typeof AccountRoute
-    }
     '/account/messages': {
       id: '/account/messages'
       path: '/messages'
@@ -475,13 +444,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/dashboard/'
       preLoaderRoute: typeof DashboardIndexRouteImport
-      parentRoute: typeof DashboardRoute
-    }
-    '/dashboard/inquiries': {
-      id: '/dashboard/inquiries'
-      path: '/inquiries'
-      fullPath: '/dashboard/inquiries'
-      preLoaderRoute: typeof DashboardInquiriesRouteImport
       parentRoute: typeof DashboardRoute
     }
     '/dashboard/messages': {
@@ -559,7 +521,6 @@ declare module '@tanstack/react-router' {
 
 interface AccountRouteChildren {
   AccountFavoritesRoute: typeof AccountFavoritesRoute
-  AccountInquiriesRoute: typeof AccountInquiriesRoute
   AccountMessagesRoute: typeof AccountMessagesRoute
   AccountReviewsRoute: typeof AccountReviewsRoute
   AccountSettingsRoute: typeof AccountSettingsRoute
@@ -568,7 +529,6 @@ interface AccountRouteChildren {
 
 const AccountRouteChildren: AccountRouteChildren = {
   AccountFavoritesRoute: AccountFavoritesRoute,
-  AccountInquiriesRoute: AccountInquiriesRoute,
   AccountMessagesRoute: AccountMessagesRoute,
   AccountReviewsRoute: AccountReviewsRoute,
   AccountSettingsRoute: AccountSettingsRoute,
@@ -579,7 +539,6 @@ const AccountRouteWithChildren =
   AccountRoute._addFileChildren(AccountRouteChildren)
 
 interface DashboardRouteChildren {
-  DashboardInquiriesRoute: typeof DashboardInquiriesRoute
   DashboardMessagesRoute: typeof DashboardMessagesRoute
   DashboardProfileRoute: typeof DashboardProfileRoute
   DashboardReviewsRoute: typeof DashboardReviewsRoute
@@ -590,7 +549,6 @@ interface DashboardRouteChildren {
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
-  DashboardInquiriesRoute: DashboardInquiriesRoute,
   DashboardMessagesRoute: DashboardMessagesRoute,
   DashboardProfileRoute: DashboardProfileRoute,
   DashboardReviewsRoute: DashboardReviewsRoute,

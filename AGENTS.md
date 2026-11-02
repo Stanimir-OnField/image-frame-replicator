@@ -10,6 +10,6 @@
 <!-- LOVABLE:END -->
 
 ## Architecture rules
-- All data access goes through query options in `src/lib/api.ts` (mock resolvers today); swap `request()` for fetch to the Rails REST API later — keeps UI untouched by backend migration.
+- All data access goes through query options and commands in `src/lib/api.ts`, which call the Rails API at `VITE_API_BASE_URL` (default `http://localhost:3000/api/v1`).
 - Routing uses TanStack Router (not React Router) and Tailwind + shadcn (not Bootstrap) — fixed by the platform stack.
 - Producer dashboard and customer account share `PanelLayout`; messaging uses one `Messenger` component — avoid duplicated page-specific UI.

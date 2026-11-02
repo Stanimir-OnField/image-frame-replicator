@@ -1,23 +1,47 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Pencil, Trash2, Plus, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Skeleton } from "@/components/ui/skeleton";
 import { PanelTitle } from "@/components/site/PanelLayout";
-import { EmptyState } from "@/components/site/bits";
-import { products } from "@/lib/mock-data";
+import { EmptyState, PageNav } from "@/components/site/bits";
+import { deleteProduct, myProductsQuery } from "@/lib/api";
 import { eur } from "@/lib/format";
 
-export const Route = createFileRoute("/dashboard/products/")({ component: MyProducts });
+type Search = { page?: number | undefined };
+
+export const Route = createFileRoute("/dashboard/products/")({
+  validateSearch: (s: { page?: unknown }): Search => {
+    const page = Number(s.page);
+    return { page: Number.isInteger(page) && page > 1 ? page : undefined };
+  },
+  component: MyProducts,
+});
 
 function MyProducts() {
-  const [list, setList] = useState(() => products.filter((p) => p.producerId === "zelenata-dolina").map((p, i) => ({ ...p, status: i === 3 ? "draft" : "active" })));
+  const { page } = Route.useSearch();
+  const navigate = useNavigate({ from: "/dashboard/products/" });
+  const q = useQuery({ ...myProductsQuery(page), placeholderData: keepPreviousData });
+  const queryClient = useQueryClient();
+  const list = q.data?.items ?? [];
+  const remove = async (id: string) => {
+    try {
+      if (list.length <= 1 && page && page > 1) await navigate({ search: { page: page - 1 > 1 ? page - 1 : undefined } });
+      await deleteProduct(id);
+      toast.success("Продуктът е изтрит");
+      await queryClient.invalidateQueries({ queryKey: ["dashboard", "products"] });
+      await queryClient.invalidateQueries({ queryKey: ["dashboard", "overview"] });
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Продуктът не е изтрит");
+    }
+  };
   return (
     <>
       <PanelTitle title="Моите продукти" action={<Button asChild><Link to="/dashboard/products/new"><Plus /> Добави продукт</Link></Button>} />
-      {list.length === 0 ? (
+      {q.isLoading ? <Skeleton className="h-48 rounded-2xl" /> : list.length === 0 ? (
         <EmptyState icon={<Package />} title="Все още нямаш продукти" text="Добави първия си продукт, за да те намират клиенти." action={<Button asChild><Link to="/dashboard/products/new">+ Добави продукт</Link></Button>} />
       ) : (
         <>
@@ -35,11 +59,8 @@ function MyProducts() {
                   </div>
                 </div>
                 <div className="flex flex-col gap-1">
-                  <Button variant="ghost" size="icon" aria-label="Редактирай" asChild><Link to="/dashboard/products/new"><Pencil /></Link></Button>
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild><Button variant="ghost" size="icon" aria-label="Изтрий"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger>
-                    <AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Изтриване на „{p.name}“?</AlertDialogTitle><AlertDialogDescription>Продуктът ще бъде премахнат от профила ви.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Отказ</AlertDialogCancel><AlertDialogAction onClick={() => { setList((l) => l.filter((x) => x.id !== p.id)); toast.success("Продуктът е изтрит"); }}>Изтрий</AlertDialogAction></AlertDialogFooter></AlertDialogContent>
-                  </AlertDialog>
+                  <Button variant="ghost" size="icon" aria-label="Редактирай" asChild><Link to="/dashboard/products/new" search={{ product: p.slug }}><Pencil /></Link></Button>
+                  <DeleteButton name={p.name} onConfirm={() => void remove(p.slug)} />
                 </div>
               </div>
             </article>
@@ -56,22 +77,29 @@ function MyProducts() {
                   <TableCell>{p.available ? "Наличен" : "Изчерпан"}</TableCell>
                   <TableCell><span className={p.status === "active" ? "rounded-full bg-accent px-2.5 py-1 text-xs font-semibold text-primary" : "rounded-full bg-muted px-2.5 py-1 text-xs font-semibold text-muted-foreground"}>{p.status === "active" ? "Активен" : "Чернова"}</span></TableCell>
                   <TableCell className="text-right">
-                    <Button variant="ghost" size="icon" aria-label="Редактирай" asChild><Link to="/dashboard/products/new"><Pencil /></Link></Button>
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild><Button variant="ghost" size="icon" aria-label="Изтрий"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader><AlertDialogTitle>Изтриване на „{p.name}“?</AlertDialogTitle><AlertDialogDescription>Продуктът ще бъде премахнат от профила ви.</AlertDialogDescription></AlertDialogHeader>
-                        <AlertDialogFooter><AlertDialogCancel>Отказ</AlertDialogCancel><AlertDialogAction onClick={() => { setList((l) => l.filter((x) => x.id !== p.id)); toast.success("Продуктът е изтрит"); }}>Изтрий</AlertDialogAction></AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
+                    <Button variant="ghost" size="icon" aria-label="Редактирай" asChild><Link to="/dashboard/products/new" search={{ product: p.slug }}><Pencil /></Link></Button>
+                    <DeleteButton name={p.name} onConfirm={() => void remove(p.slug)} />
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </div>
+        <PageNav page={q.data?.page ?? 1} pages={q.data?.pages ?? 1} onPage={(next) => navigate({ search: { page: next > 1 ? next : undefined } })} />
         </>
       )}
     </>
+  );
+}
+
+function DeleteButton({ name, onConfirm }: { name: string; onConfirm: () => void }) {
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger asChild><Button variant="ghost" size="icon" aria-label="Изтрий"><Trash2 className="text-destructive" /></Button></AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader><AlertDialogTitle>Изтриване на „{name}“?</AlertDialogTitle><AlertDialogDescription>Продуктът ще бъде премахнат от профила ви.</AlertDialogDescription></AlertDialogHeader>
+        <AlertDialogFooter><AlertDialogCancel>Отказ</AlertDialogCancel><AlertDialogAction onClick={onConfirm}>Изтрий</AlertDialogAction></AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }

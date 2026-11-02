@@ -12,6 +12,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import { Toaster } from "@/components/ui/sonner";
+import { InboxConnection } from "@/components/site/InboxConnection";
 import { SiteHeader, SiteFooter } from "@/components/site/SiteHeader";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -127,6 +128,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+      <InboxConnection />
       <div className="flex min-h-screen flex-col">
         {!isMarketing && <SiteHeader />}
         <main className="flex-1">

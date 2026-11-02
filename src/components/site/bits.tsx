@@ -1,5 +1,6 @@
-import { Star, Truck, MapPin, Package, Leaf } from "lucide-react";
+import { ChevronLeft, ChevronRight, Star, Truck, MapPin, Package, Leaf } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { bgn, deliveryLabels, eur } from "@/lib/format";
 import type { DeliveryMethod } from "@/lib/types";
@@ -81,6 +82,42 @@ export function EmptyState({ icon, title, text, action }: { icon: ReactNode; tit
       <p className="mt-2 max-w-sm text-muted-foreground">{text}</p>
       {action && <div className="mt-6">{action}</div>}
     </div>
+  );
+}
+
+export function AlertDot({ count, className }: { count: number; className?: string }) {
+  if (count <= 0) return null;
+  return <span className={cn("inline-block size-2 shrink-0 rounded-full bg-destructive", className)} aria-label={`${count} нови`} />;
+}
+
+function pageItems(page: number, pages: number) {
+  if (pages <= 7) return Array.from({ length: pages }, (_, index) => index + 1);
+  const start = Math.max(2, page - 1);
+  const end = Math.min(pages - 1, page + 1);
+  const items: Array<number | "gap"> = [1];
+  if (start > 2) items.push("gap");
+  for (let number = start; number <= end; number += 1) items.push(number);
+  if (end < pages - 1) items.push("gap");
+  items.push(pages);
+  return items;
+}
+
+export function PageNav({ page, pages, onPage }: { page: number; pages: number; onPage: (page: number) => void }) {
+  if (pages <= 1) return null;
+  const go = (next: number) => {
+    onPage(next);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+  return (
+    <nav className="mt-10 flex flex-wrap items-center justify-center gap-2" aria-label="Страници">
+      <Button variant="outline" disabled={page <= 1} onClick={() => go(page - 1)}><ChevronLeft /> Назад</Button>
+      {pageItems(page, pages).map((item, index) => item === "gap" ? (
+        <span key={`gap-${index}`} className="px-1 text-muted-foreground" aria-hidden>…</span>
+      ) : (
+        <Button key={item} size="icon" variant={item === page ? "default" : "outline"} aria-current={item === page ? "page" : undefined} aria-label={`Страница ${item}`} onClick={() => go(item)}>{item}</Button>
+      ))}
+      <Button variant="outline" disabled={page >= pages} onClick={() => go(page + 1)}>Напред <ChevronRight /></Button>
+    </nav>
   );
 }
 

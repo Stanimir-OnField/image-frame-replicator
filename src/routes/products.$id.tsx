@@ -8,9 +8,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { DeliveryTags, EmptyState, Price, SectionHeading, Stars } from "@/components/site/bits";
 import { FavoriteButton, ProductCard } from "@/components/site/cards";
-import { InquiryDialog } from "@/components/site/InquiryDialog";
+import { MessageDialog } from "@/components/site/MessageDialog";
 import { productQuery } from "@/lib/api";
-import { categories } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/products/$id")({
@@ -36,10 +35,10 @@ function ProductPage() {
       <div className="space-y-4"><Skeleton className="h-10 w-2/3" /><Skeleton className="h-6 w-1/3" /><Skeleton className="h-24 w-full" /></div>
     </div>
   );
+  if (q.isError) return <div className="container-page py-16"><EmptyState icon={<PackageX />} title="Нещо се обърка" text="Не успяхме да заредим продукта." action={<Button onClick={() => q.refetch()}>Опитай отново</Button>} /></div>;
   if (!q.data) return <div className="container-page py-16"><EmptyState icon={<PackageX />} title="Продуктът не е намерен" text="Може да е бил премахнат от производителя." action={<Button asChild><Link to="/products">Към продуктите</Link></Button>} /></div>;
 
   const { product, producer, similar } = q.data;
-  const cat = categories.find((c) => c.slug === product.category);
 
   return (
     <div className="container-page py-6 sm:py-8">
@@ -53,7 +52,7 @@ function ProductPage() {
         <div>
           <div className="relative overflow-hidden rounded-3xl bg-muted">
             <img src={product.images[img]} alt={product.name} className="aspect-square w-full object-cover" />
-            <FavoriteButton id={product.id} label={product.name} className="absolute right-4 top-4 size-12" />
+            <FavoriteButton id={product.slug} label={product.name} className="absolute right-4 top-4 size-12" />
           </div>
           <div className="mt-3 flex gap-2 overflow-x-auto pb-1 sm:mt-4 sm:gap-3">
             {product.images.map((src, i) => (
@@ -66,7 +65,7 @@ function ProductPage() {
 
         <div className="space-y-6">
           <div>
-            <Link to="/products" search={{ category: product.category }} className="text-sm font-semibold text-primary">{cat?.name}</Link>
+            <Link to="/products" search={{ category: product.category }} className="text-sm font-semibold text-primary">{product.categoryName}</Link>
             <h1 className="mt-1 text-3xl font-semibold sm:text-4xl md:text-5xl">{product.name}</h1>
             <div className="mt-3"><Stars value={product.rating} count={product.reviewsCount} /></div>
           </div>
@@ -77,7 +76,7 @@ function ProductPage() {
           <p className="text-lg leading-relaxed">{product.description}</p>
           <div className="flex flex-col gap-3 sm:flex-row">
             <Button size="lg" className="w-full sm:w-auto" onClick={() => toast.success(`Телефон: ${producer.phone}`, { description: producer.name })}><MessageCircle /> Свържи се с производителя</Button>
-            <InquiryDialog to={producer.name} product={product.name}><Button size="lg" variant="outline" className="w-full sm:w-auto"><Send /> Изпрати запитване</Button></InquiryDialog>
+            <MessageDialog to={producer.name} producerId={producer.slug} productId={product.slug} product={product.name}><Button size="lg" variant="outline" className="w-full sm:w-auto"><Send /> Изпрати съобщение</Button></MessageDialog>
           </div>
           <div className="rounded-2xl bg-cream p-5">
             <h2 className="mb-3 text-lg font-semibold">Доставка и получаване</h2>
@@ -91,7 +90,7 @@ function ProductPage() {
               <p className="flex items-center gap-1 text-sm text-muted-foreground"><MapPin className="size-3.5" />{producer.location}</p>
               <Stars value={producer.rating} count={producer.reviewsCount} />
             </div>
-            <Button asChild variant="outline" className="col-span-2 w-full sm:w-auto"><Link to="/producers/$id" params={{ id: producer.id }}>Виж профила</Link></Button>
+            <Button asChild variant="outline" className="col-span-2 w-full sm:w-auto"><Link to="/producers/$id" params={{ id: producer.slug }}>Виж профила</Link></Button>
           </div>
         </div>
       </div>

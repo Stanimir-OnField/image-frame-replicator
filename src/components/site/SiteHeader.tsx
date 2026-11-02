@@ -1,8 +1,10 @@
-import { Link } from "@tanstack/react-router";
-import { Menu, Heart, User } from "lucide-react";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Menu, Heart, MessageCircle, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Logo } from "./bits";
+import { logout, meQuery, notificationsQuery, useAuthToken } from "@/lib/api";
+import { AlertDot, Logo } from "./bits";
 
 const nav = [
   { to: "/", label: "Начало" },
@@ -13,6 +15,19 @@ const nav = [
 ] as const;
 
 export function SiteHeader() {
+  const token = useAuthToken();
+  const me = useQuery({ ...meQuery(), enabled: !!token });
+  const notes = useQuery({ ...notificationsQuery(), enabled: !!token });
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const signOut = async () => {
+    await logout();
+    queryClient.clear();
+    await navigate({ to: "/" });
+  };
+  const home = me.data?.role === "producer" ? "/dashboard" : "/account";
+  const attention = notes.data?.unreadMessages ?? 0;
+  const inbox = me.data?.role === "producer" ? "/dashboard/messages" : "/account/messages";
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur">
       <div className="container-page grid h-16 grid-cols-[minmax(0,1fr)_auto] items-center gap-3 lg:flex lg:justify-between lg:gap-4">
@@ -27,15 +42,29 @@ export function SiteHeader() {
           ))}
         </nav>
         <div className="hidden items-center gap-1 lg:flex">
-          <Button asChild variant="ghost" size="icon" aria-label="Моят профил"><Link to="/account"><User /></Link></Button>
+          {me.data && (
+            <Button asChild variant="ghost" size="icon" aria-label={attention > 0 ? `Съобщения, ${attention} нови` : "Съобщения"}>
+              <Link to={inbox} className="relative"><MessageCircle /><AlertDot count={attention} className="absolute right-1.5 top-1.5 ring-2 ring-background" /></Link>
+            </Button>
+          )}
+          <Button asChild variant="ghost" size="icon" aria-label="Моят профил"><Link to={home}><User /></Link></Button>
           <Button asChild variant="ghost" size="icon" aria-label="Любими"><Link to="/account/favorites"><Heart /></Link></Button>
-          <Button asChild variant="ghost"><Link to="/login">Вход</Link></Button>
-          <Button asChild variant="outline"><Link to="/register">Регистрация</Link></Button>
-          <Button asChild variant="sun"><Link to="/register" search={{ type: "producer" }}>Стани производител</Link></Button>
+          {me.data ? (
+            <>
+              <Button asChild variant="ghost"><Link to={home}>{me.data.name}</Link></Button>
+              <Button variant="outline" onClick={() => void signOut()}>Изход</Button>
+            </>
+          ) : (
+            <>
+              <Button asChild variant="ghost"><Link to="/login">Вход</Link></Button>
+              <Button asChild variant="outline"><Link to="/register">Регистрация</Link></Button>
+              <Button asChild variant="sun"><Link to="/register" search={{ type: "producer" }}>Стани производител</Link></Button>
+            </>
+          )}
         </div>
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Отвори менюто"><Menu className="size-6" /></Button>
+            <Button variant="ghost" size="icon" className="relative lg:hidden" aria-label={attention > 0 ? `Отвори менюто, ${attention} нови` : "Отвори менюто"}><Menu className="size-6" /><AlertDot count={attention} className="absolute right-1.5 top-1.5 ring-2 ring-background" /></Button>
           </SheetTrigger>
           <SheetContent side="right" className="w-[min(20rem,88vw)] overflow-y-auto">
             <SheetHeader><SheetTitle className="text-left"><Logo /></SheetTitle></SheetHeader>
@@ -43,12 +72,19 @@ export function SiteHeader() {
               {nav.map((n) => (
                 <Link key={n.to} to={n.to} className="rounded-xl px-3 py-3 text-base font-medium hover:bg-cream" activeOptions={{ exact: n.to === "/" }} activeProps={{ className: "bg-cream text-forest" }}>{n.label}</Link>
               ))}
+              {me.data && <Link to={inbox} className="flex items-center justify-between rounded-xl px-3 py-3 text-base font-medium hover:bg-cream">Съобщения<AlertDot count={attention} /></Link>}
               <Link to="/account" className="rounded-xl px-3 py-3 text-base font-medium hover:bg-cream">Моят профил</Link>
               <Link to="/dashboard" className="rounded-xl px-3 py-3 text-base font-medium hover:bg-cream">Табло на производител</Link>
               <div className="mt-4 flex flex-col gap-2">
-                <Button asChild variant="outline"><Link to="/login">Вход</Link></Button>
-                <Button asChild><Link to="/register">Регистрация</Link></Button>
-                <Button asChild variant="sun"><Link to="/register" search={{ type: "producer" }}>Стани производител</Link></Button>
+                {me.data ? (
+                  <Button variant="outline" onClick={() => void signOut()}>Изход</Button>
+                ) : (
+                  <>
+                    <Button asChild variant="outline"><Link to="/login">Вход</Link></Button>
+                    <Button asChild><Link to="/register">Регистрация</Link></Button>
+                    <Button asChild variant="sun"><Link to="/register" search={{ type: "producer" }}>Стани производител</Link></Button>
+                  </>
+                )}
               </div>
             </nav>
           </SheetContent>

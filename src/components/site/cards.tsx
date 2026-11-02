@@ -2,7 +2,6 @@ import { Link } from "@tanstack/react-router";
 import { Heart, MapPin, BadgeCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { categories, producers } from "@/lib/mock-data";
 import { useFavorites } from "@/lib/favorites";
 import type { Producer, Product } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -25,12 +24,11 @@ export function FavoriteButton({ id, label, className }: { id: string; label?: s
 }
 
 export function ProductCard({ product, layout = "grid" }: { product: Product; layout?: "grid" | "list" }) {
-  const producer = producers.find((p) => p.id === product.producerId)!;
   const list = layout === "list";
   return (
     <Link
       to="/products/$id"
-      params={{ id: product.id }}
+      params={{ id: product.slug }}
       className={cn("card-soft hover-lift group relative flex min-w-0 overflow-hidden", list ? "flex-row" : "flex-col")}
     >
       <div className={cn("relative overflow-hidden bg-muted", list ? "w-28 shrink-0 sm:w-52" : "aspect-[4/3]")}>
@@ -38,14 +36,14 @@ export function ProductCard({ product, layout = "grid" }: { product: Product; la
         {!product.available && (
           <span className="absolute left-3 top-3 rounded-full bg-forest px-2.5 py-1 text-xs font-semibold text-primary-foreground">Изчерпан</span>
         )}
-        <FavoriteButton id={product.id} label={product.name} className="absolute right-3 top-3" />
+        <FavoriteButton id={product.slug} label={product.name} className="absolute right-3 top-3" />
       </div>
       <div className="flex min-w-0 flex-1 flex-col gap-2 p-3 sm:p-4">
         <h3 className="line-clamp-2 font-display text-base font-semibold leading-tight sm:text-lg">{product.name}</h3>
         <p className="truncate text-sm text-muted-foreground">
-          {producer.name}
+          {product.producerName}
         </p>
-        <p className="flex items-center gap-1 text-xs text-muted-foreground"><MapPin className="size-3.5" />{producer.location}</p>
+        <p className="flex items-center gap-1 text-xs text-muted-foreground"><MapPin className="size-3.5" />{product.producerLocation}</p>
         <Stars value={product.rating} count={product.reviewsCount} />
         <div className="mt-auto flex flex-wrap items-end justify-between gap-2 pt-2">
           <Price value={product.price} unit={product.unit} />
@@ -61,7 +59,7 @@ export function ProducerCard({ producer }: { producer: Producer }) {
     <div className="card-soft hover-lift flex flex-col overflow-hidden">
       <div className="relative h-32 bg-muted">
         <img src={producer.cover} alt="" loading="lazy" className="h-full w-full object-cover" />
-        <img src={producer.avatar} alt={producer.name} loading="lazy" className="absolute -bottom-8 left-5 size-16 rounded-2xl border-4 border-background object-cover shadow-md" />
+        <img src={producer.avatar} alt={producer.name} className="absolute -bottom-8 left-5 size-16 rounded-2xl border-4 border-background object-cover shadow-md" />
       </div>
       <div className="flex flex-1 flex-col gap-2 p-5 pt-10">
         <h3 className="flex items-center gap-1.5 font-display text-lg font-semibold">
@@ -72,15 +70,15 @@ export function ProducerCard({ producer }: { producer: Producer }) {
         <Stars value={producer.rating} count={producer.reviewsCount} />
         <p className="line-clamp-2 text-sm">{producer.description}</p>
         <div className="flex flex-wrap gap-1.5">
-          {producer.categories.map((c) => (
-            <span key={c} className="rounded-full bg-cream px-2.5 py-1 text-xs font-medium text-forest">
-              {categories.find((x) => x.slug === c)?.name}
+          {producer.categoryNames.map((name) => (
+            <span key={name} className="rounded-full bg-cream px-2.5 py-1 text-xs font-medium text-forest">
+              {name}
             </span>
           ))}
         </div>
         <DeliveryTags methods={producer.delivery} />
         <Button asChild variant="outline" className="mt-auto">
-          <Link to="/producers/$id" params={{ id: producer.id }}>Виж производителя</Link>
+          <Link to="/producers/$id" params={{ id: producer.slug }}>Виж производителя</Link>
         </Button>
       </div>
     </div>

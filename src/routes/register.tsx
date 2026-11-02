@@ -1,10 +1,12 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { ShoppingBasket, Tractor } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AuthCard } from "@/components/site/AuthCard";
+import { register } from "@/lib/api";
 import { cn } from "@/lib/utils";
 
 type S = { type?: "customer" | "producer" | undefined };
@@ -21,6 +23,7 @@ export const Route = createFileRoute("/register")({
 function Register() {
   const { type = "customer" } = Route.useSearch();
   const navigate = useNavigate({ from: "/register" });
+  const queryClient = useQueryClient();
   const producer = type === "producer";
   return (
     <AuthCard title="Създай профил" subtitle="Регистрацията е безплатна.">
@@ -33,12 +36,30 @@ function Register() {
           </button>
         ))}
       </div>
-      <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); toast.success("Профилът е създаден!"); navigate({ to: producer ? "/dashboard" : "/account" }); }}>
-        <div className="space-y-1.5"><Label htmlFor="name">{producer ? "Име на фермата / стопанството" : "Име и фамилия"}</Label><Input id="name" required /></div>
-        {producer && <div className="space-y-1.5"><Label htmlFor="loc">Населено място</Label><Input id="loc" required placeholder="напр. с. Брестник, Пловдив" /></div>}
-        <div className="space-y-1.5"><Label htmlFor="email">Имейл</Label><Input id="email" type="email" required /></div>
-        {producer && <div className="space-y-1.5"><Label htmlFor="phone">Телефон</Label><Input id="phone" type="tel" required /></div>}
-        <div className="space-y-1.5"><Label htmlFor="pw">Парола</Label><Input id="pw" type="password" required minLength={8} /></div>
+      <form className="space-y-4" onSubmit={async (event) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        try {
+          const user = await register({
+            role: producer ? "producer" : "customer",
+            name: String(data.get("name")),
+            email: String(data.get("email")),
+            password: String(data.get("password")),
+            location: String(data.get("location") ?? ""),
+            phone: String(data.get("phone") ?? ""),
+          });
+          queryClient.setQueryData(["me"], user);
+          toast.success("Профилът е създаден!");
+          await navigate({ to: producer ? "/dashboard" : "/account" });
+        } catch (error) {
+          toast.error(error instanceof Error ? error.message : "Неуспешна регистрация");
+        }
+      }}>
+        <div className="space-y-1.5"><Label htmlFor="name">{producer ? "Име на фермата / стопанството" : "Име и фамилия"}</Label><Input id="name" name="name" required /></div>
+        {producer && <div className="space-y-1.5"><Label htmlFor="loc">Населено място</Label><Input id="loc" name="location" required placeholder="напр. с. Брестник, Пловдив" /></div>}
+        <div className="space-y-1.5"><Label htmlFor="email">Имейл</Label><Input id="email" name="email" type="email" required /></div>
+        {producer && <div className="space-y-1.5"><Label htmlFor="phone">Телефон</Label><Input id="phone" name="phone" type="tel" required /></div>}
+        <div className="space-y-1.5"><Label htmlFor="pw">Парола</Label><Input id="pw" name="password" type="password" required minLength={8} /></div>
         <Button type="submit" className="w-full" size="lg" variant={producer ? "sun" : "default"}>{producer ? "Стани производител" : "Регистрация"}</Button>
         <p className="text-center text-sm text-muted-foreground">Имаш профил? <Link to="/login" className="font-semibold text-primary">Вход</Link></p>
       </form>
