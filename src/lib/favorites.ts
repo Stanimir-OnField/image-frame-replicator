@@ -3,14 +3,15 @@ import { toast } from "sonner";
 import { addFavorite, favoritesQuery, removeFavorite, useAuthToken } from "./api";
 
 function target(id: string) {
-  if (id.startsWith("producer:")) return { type: "producer" as const, slug: id.slice("producer:".length) };
+  if (id.startsWith("producer:"))
+    return { type: "producer" as const, slug: id.slice("producer:".length) };
   return { type: "product" as const, slug: id };
 }
 
-export function useFavorites(page?: number) {
+export function useFavorites(page?: number, q?: string) {
   const token = useAuthToken();
   const queryClient = useQueryClient();
-  const query = useQuery({ ...favoritesQuery(page), enabled: !!token });
+  const query = useQuery({ ...favoritesQuery(page, q), enabled: !!token });
   const list = query.data?.ids ?? [];
 
   const toggle = async (id: string, label = "Продуктът") => {

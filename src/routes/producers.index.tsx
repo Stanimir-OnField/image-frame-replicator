@@ -5,17 +5,28 @@ import { SearchX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { EmptyState, PageHeader, PageNav } from "@/components/site/bits";
 import { CardSkeleton, ProducerCard } from "@/components/site/cards";
-import { FilterAside, FilterDrawer, FilterSection, searchFlag } from "@/components/site/FilterPanel";
+import {
+  FilterAside,
+  FilterDrawer,
+  FilterSection,
+  SearchableSelect,
+  searchFlag,
+  searchList,
+} from "@/components/site/FilterPanel";
 import { categoriesQuery, locationsQuery, producersQuery } from "@/lib/api";
 import { deliveryLabels } from "@/lib/format";
 import type { DeliveryMethod, ProducerFilters } from "@/lib/types";
 
 type Search = ProducerFilters;
-
-const ALL = "__all";
 
 export const Route = createFileRoute("/producers/")({
   validateSearch: (s: Partial<Record<keyof Search, unknown>>): Search => {
@@ -23,8 +34,8 @@ export const Route = createFileRoute("/producers/")({
     const sort = s.sort;
     return {
       q: typeof s.q === "string" && s.q ? s.q : undefined,
-      category: typeof s.category === "string" && s.category ? s.category : undefined,
-      location: typeof s.location === "string" && s.location ? s.location : undefined,
+      category: searchList(s.category),
+      location: searchList(s.location),
       delivery: Array.isArray(s.delivery) ? (s.delivery as DeliveryMethod[]) : undefined,
       minRating: s.minRating ? Number(s.minRating) : undefined,
       verified: searchFlag(s.verified),
@@ -50,35 +61,52 @@ function Filters({ s, set }: { s: Search; set: (patch: Partial<Search>) => void 
   return (
     <div className="space-y-5">
       <FilterSection title="Търсене">
-        <Input key={s.q ?? ""} defaultValue={s.q ?? ""} placeholder="Име или град" onKeyDown={(event) => event.key === "Enter" && set({ q: (event.target as HTMLInputElement).value || undefined })} onBlur={(event) => set({ q: event.target.value || undefined })} />
+        <Input
+          key={s.q ?? ""}
+          defaultValue={s.q ?? ""}
+          placeholder="Име или град"
+          onKeyDown={(event) =>
+            event.key === "Enter" &&
+            set({ q: (event.target as HTMLInputElement).value || undefined })
+          }
+          onBlur={(event) => set({ q: event.target.value || undefined })}
+        />
       </FilterSection>
       <FilterSection title="Населено място">
-        <Select value={s.location ?? ALL} onValueChange={(value) => set({ location: value === ALL ? undefined : value })}>
-          <SelectTrigger className="rounded-xl"><SelectValue /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value={ALL}>Цяла България</SelectItem>
-            {(locations.data ?? []).map((location) => <SelectItem key={location} value={location}>{location}</SelectItem>)}
-          </SelectContent>
-        </Select>
+        <SearchableSelect
+          ariaLabel="Населено място"
+          allLabel="Цяла България"
+          value={s.location}
+          onValueChange={(value) => set({ location: value })}
+          options={(locations.data ?? []).map((location) => ({ value: location, label: location }))}
+        />
       </FilterSection>
       <FilterSection title="Категория">
-        <Select value={s.category ?? ALL} onValueChange={(value) => set({ category: value === ALL ? undefined : value })}>
-          <SelectTrigger className="rounded-xl"><SelectValue /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value={ALL}>Всички</SelectItem>
-            {(categories.data ?? []).map((category) => <SelectItem key={category.slug} value={category.slug}>{category.name}</SelectItem>)}
-          </SelectContent>
-        </Select>
+        <SearchableSelect
+          ariaLabel="Категория"
+          allLabel="Всички"
+          value={s.category}
+          onValueChange={(value) => set({ category: value })}
+          options={(categories.data ?? []).map((category) => ({
+            value: category.slug,
+            label: category.name,
+          }))}
+        />
       </FilterSection>
       <FilterSection title="Начин на получаване">
         <div className="space-y-2">
           {(Object.keys(deliveryLabels) as DeliveryMethod[]).map((method) => (
             <label key={method} className="flex items-center gap-2 text-sm">
-              <Checkbox checked={s.delivery?.includes(method) ?? false} onCheckedChange={(checked) => {
-                const current = s.delivery ?? [];
-                const next = checked ? [...current, method] : current.filter((item) => item !== method);
-                set({ delivery: next.length ? next : undefined });
-              }} />
+              <Checkbox
+                checked={s.delivery?.includes(method) ?? false}
+                onCheckedChange={(checked) => {
+                  const current = s.delivery ?? [];
+                  const next = checked
+                    ? [...current, method]
+                    : current.filter((item) => item !== method);
+                  set({ delivery: next.length ? next : undefined });
+                }}
+              />
               {deliveryLabels[method]}
             </label>
           ))}
@@ -88,7 +116,13 @@ function Filters({ s, set }: { s: Search; set: (patch: Partial<Search>) => void 
         <div className="space-y-2">
           {[4.5, 4, 0].map((rating) => (
             <label key={rating} className="flex items-center gap-2 text-sm">
-              <input type="radio" name={ratingName} className="accent-[var(--primary)]" checked={(s.minRating ?? 0) === rating} onChange={() => set({ minRating: rating || undefined })} />
+              <input
+                type="radio"
+                name={ratingName}
+                className="accent-[var(--primary)]"
+                checked={(s.minRating ?? 0) === rating}
+                onChange={() => set({ minRating: rating || undefined })}
+              />
               {rating ? `${rating}+ звезди` : "Всички"}
             </label>
           ))}
@@ -96,11 +130,18 @@ function Filters({ s, set }: { s: Search; set: (patch: Partial<Search>) => void 
       </FilterSection>
       <FilterSection title="Потвърждение">
         <label className="flex items-center gap-2 text-sm">
-          <Checkbox checked={s.verified ?? false} onCheckedChange={(checked) => set({ verified: checked ? true : undefined })} />
+          <Checkbox
+            checked={s.verified ?? false}
+            onCheckedChange={(checked) => set({ verified: checked ? true : undefined })}
+          />
           Само потвърдени
         </label>
       </FilterSection>
-      <Button variant="outline" className="w-full" asChild><Link to="/producers" search={{}}>Изчисти филтрите</Link></Button>
+      <Button variant="outline" className="w-full" asChild>
+        <Link to="/producers" search={{}}>
+          Изчисти филтрите
+        </Link>
+      </Button>
     </div>
   );
 }
@@ -108,21 +149,41 @@ function Filters({ s, set }: { s: Search; set: (patch: Partial<Search>) => void 
 function ProducersPage() {
   const s = Route.useSearch();
   const navigate = useNavigate({ from: "/producers/" });
-  const set = (patch: Partial<Search>) => navigate({ search: (prev) => ({ ...prev, ...patch, page: "page" in patch ? patch.page : undefined }) });
+  const set = (patch: Partial<Search>) =>
+    navigate({
+      search: (prev) => ({ ...prev, ...patch, page: "page" in patch ? patch.page : undefined }),
+    });
   const q = useQuery({ ...producersQuery(s), placeholderData: keepPreviousData });
   const list = q.data?.items ?? [];
   return (
     <>
-      <PageHeader title="Производители" subtitle="Запознай се с хората, които отглеждат храната ти." />
+      <PageHeader
+        title="Производители"
+        subtitle="Запознай се с хората, които отглеждат храната ти."
+      />
       <div className="container-page grid gap-8 py-7 sm:py-10 lg:grid-cols-[260px_1fr]">
-        <FilterAside><Filters s={s} set={set} /></FilterAside>
+        <FilterAside>
+          <Filters s={s} set={set} />
+        </FilterAside>
         <div>
           <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
-            <p className="text-muted-foreground">{q.data ? `${q.data.total} производителя` : "Зареждане..."}</p>
+            <p className="text-muted-foreground">
+              {q.data ? `${q.data.total} производителя` : "Зареждане..."}
+            </p>
             <div className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-2 sm:flex">
-              <FilterDrawer><Filters s={s} set={set} /></FilterDrawer>
-              <Select value={s.sort ?? "popular"} onValueChange={(value) => set({ sort: value as Search["sort"] })}>
-                <SelectTrigger className="w-full min-w-0 rounded-full sm:w-52" aria-label="Подреди по"><SelectValue /></SelectTrigger>
+              <FilterDrawer>
+                <Filters s={s} set={set} />
+              </FilterDrawer>
+              <Select
+                value={s.sort ?? "popular"}
+                onValueChange={(value) => set({ sort: value as Search["sort"] })}
+              >
+                <SelectTrigger
+                  className="w-full min-w-0 rounded-full sm:w-52"
+                  aria-label="Подреди по"
+                >
+                  <SelectValue />
+                </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="popular">Най-популярни</SelectItem>
                   <SelectItem value="rating">Най-висока оценка</SelectItem>
@@ -132,15 +193,47 @@ function ProducersPage() {
             </div>
           </div>
           {q.isError ? (
-            <EmptyState icon={<SearchX />} title="Нещо се обърка" text={q.error instanceof Error ? q.error.message : "Не успяхме да заредим производителите."} action={<Button onClick={() => q.refetch()}>Опитай отново</Button>} />
+            <EmptyState
+              icon={<SearchX />}
+              title="Нещо се обърка"
+              text={
+                q.error instanceof Error
+                  ? q.error.message
+                  : "Не успяхме да заредим производителите."
+              }
+              action={<Button onClick={() => q.refetch()}>Опитай отново</Button>}
+            />
           ) : q.isLoading ? (
-            <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">{Array.from({ length: 6 }).map((_, index) => <CardSkeleton key={index} />)}</div>
+            <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <CardSkeleton key={index} />
+              ))}
+            </div>
           ) : list.length === 0 ? (
-            <EmptyState icon={<SearchX />} title="Няма намерени производители" text="Опитай с друга дума или премахни някои филтри." action={<Button asChild><Link to="/producers" search={{}}>Изчисти филтрите</Link></Button>} />
+            <EmptyState
+              icon={<SearchX />}
+              title="Няма намерени производители"
+              text="Опитай с друга дума или премахни някои филтри."
+              action={
+                <Button asChild>
+                  <Link to="/producers" search={{}}>
+                    Изчисти филтрите
+                  </Link>
+                </Button>
+              }
+            />
           ) : (
-            <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">{list.map((producer) => <ProducerCard key={producer.id} producer={producer} />)}</div>
+            <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+              {list.map((producer) => (
+                <ProducerCard key={producer.id} producer={producer} />
+              ))}
+            </div>
           )}
-          <PageNav page={q.data?.page ?? 1} pages={q.data?.pages ?? 1} onPage={(page) => set({ page: page > 1 ? page : undefined })} />
+          <PageNav
+            page={q.data?.page ?? 1}
+            pages={q.data?.pages ?? 1}
+            onPage={(page) => set({ page: page > 1 ? page : undefined })}
+          />
         </div>
       </div>
     </>

@@ -65,7 +65,7 @@ function ProductPage() {
 
         <div className="space-y-6">
           <div>
-            <Link to="/products" search={{ category: product.category }} className="text-sm font-semibold text-primary">{product.categoryName}</Link>
+            <Link to="/products" search={{ category: [product.category] }} className="text-sm font-semibold text-primary">{product.categoryName}</Link>
             <h1 className="mt-1 text-3xl font-semibold sm:text-4xl md:text-5xl">{product.name}</h1>
             <div className="mt-3"><Stars value={product.rating} count={product.reviewsCount} /></div>
           </div>
