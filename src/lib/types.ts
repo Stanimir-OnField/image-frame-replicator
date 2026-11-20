@@ -125,9 +125,9 @@ export interface DashboardOverview {
 
 export interface ProductFilters {
   q?: string | undefined;
-  category?: string | undefined;
-  location?: string | undefined;
-  producer?: string | undefined;
+  category?: string[] | undefined;
+  location?: string[] | undefined;
+  producer?: string[] | undefined;
   delivery?: DeliveryMethod[] | undefined;
   minRating?: number | undefined;
   minPrice?: number | undefined;
@@ -143,8 +143,8 @@ export interface ProductFilters {
 
 export interface ProducerFilters {
   q?: string | undefined;
-  category?: string | undefined;
-  location?: string | undefined;
+  category?: string[] | undefined;
+  location?: string[] | undefined;
   delivery?: DeliveryMethod[] | undefined;
   minRating?: number | undefined;
   verified?: boolean | undefined;

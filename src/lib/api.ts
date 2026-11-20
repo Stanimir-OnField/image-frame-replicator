@@ -402,6 +402,29 @@ async function requestOrNull<T>(path: string): Promise<T | null> {
   }
 }
 
+function appendAll(params: URLSearchParams, key: string, value?: string | string[]) {
+  const list = !value ? [] : Array.isArray(value) ? value : [value];
+  list.forEach((item) => params.append(`${key}[]`, item));
+}
+
+function dashboardProductSearch(filters: {
+  page?: number | undefined;
+  q?: string | undefined;
+  status?: "active" | "draft" | undefined;
+  available?: boolean | undefined;
+  category?: string | string[] | undefined;
+}) {
+  const params = new URLSearchParams();
+  if (filters.q) params.set("q", filters.q);
+  if (filters.status) params.set("status", filters.status);
+  if (filters.available === true) params.set("available", "1");
+  if (filters.available === false) params.set("available", "0");
+  appendAll(params, "category", filters.category);
+  if (filters.page && filters.page > 1) params.set("page", String(filters.page));
+  const query = params.toString();
+  return query ? `?${query}` : "";
+}
+
 function pageSearch(filters: {
   q?: string | undefined;
   page?: number | undefined;
@@ -418,9 +441,9 @@ function pageSearch(filters: {
 function catalogSearch(filters: ProductFilters) {
   const params = new URLSearchParams();
   if (filters.q) params.set("q", filters.q);
-  if (filters.category) params.set("category", filters.category);
-  if (filters.location) params.set("region", filters.location);
-  if (filters.producer) params.set("producer", filters.producer);
+  appendAll(params, "category", filters.category);
+  appendAll(params, "region", filters.location);
+  appendAll(params, "producer", filters.producer);
   filters.delivery?.forEach((method) => params.append("delivery[]", method));
   if (filters.minRating) params.set("min_rating", String(filters.minRating));
   if (filters.minPrice !== undefined) params.set("min_price", String(filters.minPrice));
@@ -671,8 +694,8 @@ export const locationsQuery = () =>
 function producerSearch(filters: ProducerFilters) {
   const params = new URLSearchParams();
   if (filters.q) params.set("q", filters.q);
-  if (filters.location) params.set("region", filters.location);
-  if (filters.category) params.set("category", filters.category);
+  appendAll(params, "region", filters.location);
+  appendAll(params, "category", filters.category);
   filters.delivery?.forEach((method) => params.append("delivery[]", method));
   if (filters.minRating) params.set("min_rating", String(filters.minRating));
   if (filters.verified) params.set("verified", "1");
@@ -737,9 +760,9 @@ export const productQuery = (id: string) =>
       };
     },
   });
-export const favoritesQuery = (page?: number) =>
+export const favoritesQuery = (page?: number, q?: string) =>
   queryOptions({
-    queryKey: ["favorites", page ?? 1],
+    queryKey: ["favorites", page ?? 1, q ?? ""],
     queryFn: () =>
       request<{
         ids: string[];
@@ -747,13 +770,35 @@ export const favoritesQuery = (page?: number) =>
         total: number;
         page: number;
         pages: number;
-      }>(`/favorites${pageSearch({ page })}`).then((data) => ({
+      }>(`/favorites${pageSearch({ page, q })}`).then((data) => ({
         ids: data.ids,
         products: data.products.map(mapProduct),
         total: data.total,
         page: data.page,
         pages: data.pages,
       })),
+  });
+export const favoriteProducersQuery = (page?: number, q?: string) =>
+  queryOptions({
+    queryKey: ["favorites", "producers", page ?? 1, q ?? ""],
+    queryFn: () => {
+      const params = new URLSearchParams({ type: "producer" });
+      if (q) params.set("q", q);
+      if (page && page > 1) params.set("page", String(page));
+      return request<{
+        ids: string[];
+        producers: RawProducer[];
+        total: number;
+        page: number;
+        pages: number;
+      }>(`/favorites?${params}`).then((data) => ({
+        ids: data.ids,
+        producers: data.producers.map(mapProducer),
+        total: data.total,
+        page: data.page,
+        pages: data.pages,
+      }));
+    },
   });
 export const conversationsQuery = (scope: "customer" | "producer") =>
   queryOptions({
@@ -800,11 +845,19 @@ export const dashboardProfileQuery = () =>
     queryKey: ["dashboard", "profile"],
     queryFn: () => request<RawProducer>("/dashboard/profile").then(mapProducer),
   });
-export const myProductsQuery = (page?: number) =>
+export const myProductsQuery = (
+  filters: {
+    page?: number | undefined;
+    q?: string | undefined;
+    status?: "active" | "draft" | undefined;
+    available?: boolean | undefined;
+    category?: string | string[] | undefined;
+  } = {},
+) =>
   queryOptions({
-    queryKey: ["dashboard", "products", page ?? 1],
+    queryKey: ["dashboard", "products", filters],
     queryFn: () =>
-      request<RawPage>(`/dashboard/products${pageSearch({ page })}`).then((data) => ({
+      request<RawPage>(`/dashboard/products${dashboardProductSearch(filters)}`).then((data) => ({
         ...data,
         items: data.items.map(mapProduct),
       })),
